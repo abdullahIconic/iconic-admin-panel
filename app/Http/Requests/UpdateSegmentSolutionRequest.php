@@ -1,0 +1,39 @@
+<?php
+
+namespace App\Http\Requests;
+
+use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
+
+class UpdateSegmentSolutionRequest extends FormRequest
+{
+    /**
+     * Determine if the user is authorized to make this request.
+     *
+     * @return bool
+     */
+    public function authorize()
+    {
+        return true;
+    }
+
+    /**
+     * Get the validation rules that apply to the request.
+     *
+     * @return array
+     */
+    public function rules()
+    {
+        return [
+            "visible" => "required",
+            "title" => "required",
+            "url" => ["required", Rule::unique('segment_solutions')->ignore($this->solution)],
+            "image" => "nullable|image",
+            "isFeatured" => "required",
+            "product_segment_id" => "required",
+            "authored_by" => "required",
+            "description" => "required",
+            "article" => "required",
+        ];
+    }
+}

@@ -1,0 +1,77 @@
+@import './variables';
+
+// Position
+.relative{position: relative;}
+.absolute{position: absolute;}
+
+.top-0{bottom: 0;}
+.right-0{right: 0;}
+.bottom-0{bottom: 0;}
+.left-0{left: 0;}
+.inset-0{inset: 0;}
+
+// Overflow
+.hidden{overflow: hidden;}
+
+// Border
+.border{
+    border: 1px solid #ededed;
+    transition: 0.3s;
+
+    &:hover{
+        border-color: $dark9;
+    }
+}
+
+// Border - Radius
+.br1em{
+    border-radius: 1em;
+    overflow: hidden;
+}
+
+// Padding
+.p-05em{padding: 0.5em;}
+.p-1em{padding: 1em;}
+
+// Height
+.h-fc{height: fit-content;}
+
+// Width
+.w-50{width: 50%;}
+.w-75{width: 75%;}
+.w-100{width: 100%;}
+
+// Transform
+.translateY-50{transform: translateY(50%);}
+.translateY-n50{transform: translateY(-50%);}
+
+// Z-Index
+.z-index{z-index: 1001;}
+
+// BG Color
+.bg-white{background-color: rgba($color: #fff, $alpha: 1.0)!important;}
+.bg-white-50{background-color: rgba($color: #fff, $alpha: 0.5);}
+.bg-white-70{background-color: rgba($color: #fff, $alpha: 0.75);}
+
+// Font Size
+.h1{
+    font-size: 3em;
+    line-height: 1em
+};
+.h2{
+    font-size: 2.5em;
+    line-height: 1em
+};
+.h3{
+    font-size: 2em;
+    line-height: 1em
+};
+
+// List
+.ls-none{list-style: none;}
+
+// Text Color
+.text-dark2{color: $dark2;}
+
+// Text Color
+.bg-dark2{background-color: $dark2;}
