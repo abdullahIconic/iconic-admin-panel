@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Http\Livewire\Services;
+namespace App\Http\Livewire\GrowthPaths;
 
 use Livewire\Component;
 use Livewire\WithPagination;
 
-use App\Models\Service;
+use App\Models\Client;
+use App\Models\GrowthPath;
 
 class Index extends Component
 {
@@ -14,11 +15,11 @@ class Index extends Component
 
     public $qty = 20;
     public $keyword = '';
-    public $totalServices;
+    public $totalClients;
 
     public function mount()
     {
-        $this->totalServices = Service::count();
+        $this->totalClients = GrowthPath::count();
     }
 
     public function updatingQty()
@@ -33,14 +34,14 @@ class Index extends Component
 
     public function render()
     {
-        $this->totalServices = Service::where(function ($query) {
+        $this->totalClients = GrowthPath::where(function ($query) {
             $query->where('title', 'like', '%'.$this->keyword.'%');
         })->count();
 
-        return view('livewire.services.index', [
-            'services' => Service::where(function ($query) {
+        return view('livewire.growthpath.index', [
+            'growthpaths' => GrowthPath::where(function ($query) {
                 $query->where('title', 'like', '%'.$this->keyword.'%');
-            })->paginate($this->qty)
+            })->orderByDesc('id')->paginate($this->qty)
         ])->extends('layouts.panel');
     }
 }

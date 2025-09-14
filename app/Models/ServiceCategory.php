@@ -19,7 +19,7 @@ class ServiceCategory extends Model
 
     public function subcategories()
     {
-        return $this->hasMany(ServiceSubCategory::class, 'category_id');
+        return $this->hasMany(ServiceSubcategory::class, 'category_id');
     }
 
     public function feature_images()

@@ -49,10 +49,11 @@ Route::controller(ServiceController::class)
     ->group(function () {
         Route::get('services-page-data', 'data');
 
-        Route::get('services/category/{category}', 'category');
+        Route::get('services/category/{slug}', 'category');
+        Route::get('services/subcategory/{slug}', 'subcategory');
         Route::get('industries/category/{category}', 'icategory');
 
-        Route::get('services/details/{service}', 'service');
+        Route::get('services/details/{slug}', 'service');
         Route::get('industries/details/{service}', 'iservice');
     });
 
@@ -118,11 +119,11 @@ Route::controller(ProductController::class)
         // ASM Brand filter
         Route::get('brands/{brand}', 'productsBrand');
         Route::get('category/{category}', 'productsCategory');
-            
+
         Route::get('brands/{brand}/{category}', 'productsBrandCategory');
         Route::get('segments/{segment}', 'productsSegment');
 
-      
+
     });
 
 // Offer

@@ -1,7 +1,7 @@
 @section('navbar')
     @livewire('layout.navbar', [
         'title' => $category->title,
-        'parent' => 'Service Categories',
+        'parent' => 'Business Wings Categories',
         'parentRoute' => 'services.categories',
         'page' => 'show',
     ])
@@ -26,6 +26,12 @@
                 <th scope="col">Image</th>
                 <td>
                     <img src="{{asset('storage/' . $category->image_medium)}}" alt="">
+                </td>
+            </tr>
+            <tr>
+                <th scope="col">Icon</th>
+                <td>
+                    <img src="{{asset('storage/' . $category->icon)}}" alt="">
                 </td>
             </tr>
             <tr>

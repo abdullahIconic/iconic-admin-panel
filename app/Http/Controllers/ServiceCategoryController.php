@@ -3,10 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Helper\Thumbnail;
+use App\Models\ServiceCategory;
+use Intervention\Image\Facades\Image;
+use Illuminate\Support\Facades\Storage;
 use App\Http\Requests\StoreServiceCategoryRequest;
 use App\Http\Requests\UpdateServiceCategoryRequest;
-use Illuminate\Support\Facades\Storage;
-use App\Models\ServiceCategory;
 
 class ServiceCategoryController extends Controller
 {
@@ -37,7 +38,7 @@ class ServiceCategoryController extends Controller
     public function assetsChecker($entry, $request)
     {
         // Checking for sample
-        if($request->hasFile('image')){
+        if ($request->hasFile('image')) {
 
             // Deleting existing image
             Storage::delete($entry->image);
@@ -67,6 +68,26 @@ class ServiceCategoryController extends Controller
                 "updated_at" => now(),
             ]);
         }
+
+        // Checking for icon
+        if ($request->hasFile('icon')) {
+            Storage::disk('public')->delete($entry->icon);
+
+            $path = "services/categories/icons";
+            $filename = uniqid() . '.' . $request->file('icon')->getClientOriginalExtension();
+
+            $image = Image::make($request->file('icon'))
+                ->fit(100, 100)
+                ->encode();
+
+            Storage::disk('public')->put($path . '/' . $filename, (string) $image);
+
+            $entry->update([
+                "icon"       => $path . '/' . $filename,
+                "updated_by" => auth()->id(),
+                "updated_at" => now(),
+            ]);
+        }
     }
 
     /**
@@ -82,10 +103,10 @@ class ServiceCategoryController extends Controller
             "slogan" => $request->title,
             "title" => $request->title,
             "url" => $request->url,
-            "description" => $request->description,
             "overview" => $request->overview,
-            "soltuion_overview" => $request->soltuion_overview,
+            "solution_overview" => $request->solution_overview,
             "project_overview" => $request->project_overview,
+            "description" => $request->description,
             "meta_title" => $request->meta_title,
             "meta_description" => $request->meta_description,
             "meta_keywords" => $request->meta_keywords,
@@ -135,10 +156,10 @@ class ServiceCategoryController extends Controller
             "slogan" => $request->slogan,
             "title" => $request->title,
             "url" => $request->url,
-            "description" => $request->description,
-            "overview" => $request->overview,
+             "overview" => $request->overview,
             "solution_overview" => $request->solution_overview,
             "project_overview" => $request->project_overview,
+            "description" => $request->description,
             "meta_title" => $request->meta_title,
             "meta_description" => $request->meta_description,
             "meta_keywords" => $request->meta_keywords,
@@ -148,7 +169,7 @@ class ServiceCategoryController extends Controller
 
         // Assets checker
         $this->assetsChecker($category, $request);
-   
-        return back()->with('status', 'Updated!');
+
+        return redirect(route('services.categories.index'))->with('status', 'Updated!');
     }
 }

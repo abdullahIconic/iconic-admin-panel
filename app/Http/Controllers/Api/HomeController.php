@@ -9,11 +9,14 @@ use App\Models\Brand;
 use App\Http\Resources\BrandResource;
 use App\Models\Client;
 use App\Http\Resources\ClientResource;
+use App\Http\Resources\GrowthPathResource;
+use App\Http\Resources\ServiceCategoryResource;
 use App\Models\Service;
 use App\Http\Resources\ServiceResource;
 use App\Http\Resources\SliderResource;
 use App\Models\Activity;
 use App\Models\Counter;
+use App\Models\GrowthPath;
 use App\Models\HappyClient;
 use App\Models\Industry;
 use App\Models\SectionData;
@@ -28,11 +31,13 @@ use App\Models\Offer;
 use App\Models\Popup;
 use App\Models\ProductSegment;
 use App\Models\Team;
+use Illuminate\Support\Facades\Log;
 
 class HomeController extends Controller
 {
     public function data()
     {
+        Log::info('Home page data requested');
         try {
             // Section Data
             $sectionData = SectionData::where('page', 'home')->get();
@@ -55,14 +60,14 @@ class HomeController extends Controller
                 ->where('visible', 1)
                 ->orderBy('position', 'asc')
                 ->get();
-            $sliders = $sliders->map(fn ($slider) => new SliderResource($slider));
+            $sliders = $sliders->map(fn($slider) => new SliderResource($slider));
 
             // About Slider
             $about_sliders = Slider::where('page_name', 'home/about')
                 ->where('visible', 1)
                 ->orderBy('position', 'asc')
                 ->get();
-            $about_sliders = $about_sliders->map(fn ($slider) => new SliderResource($slider));
+            $about_sliders = $about_sliders->map(fn($slider) => new SliderResource($slider));
 
             // // Service Carousel
             // $serviceCarousels = ServiceCarousel::where('carousel_for', 'home')
@@ -116,8 +121,15 @@ class HomeController extends Controller
                 ->latest()
                 ->get()
                 ->take(4);
-            $activities = $activities->map(fn ($post) => new ActivityResource($post));
+            $activities = $activities->map(fn($post) => new ActivityResource($post));
 
+            // wings category
+
+            $service_categories = ServiceCategory::where('visible', true)
+                ->where('type', 'service')
+                ->take(7)
+                ->get();
+            $service_categories = $service_categories->map(fn($serviceCategories) => new ServiceCategoryResource($serviceCategories));
             // // Brands
             // $brands = Brand::where('visible', true)->get();
             // $brands = $brands->map(fn ($brand) => new BrandResource($brand));
@@ -127,11 +139,15 @@ class HomeController extends Controller
             // Special Services
             // Appointment
 
-            $supports=Team::where('support',1)->get()->take(3);
+            $supports = Team::where('support', 1)->get()->take(3);
 
             // Clients
             $clients = Client::where('visible', true)->get();
-            $clients = $clients->map(fn ($client) => new ClientResource($client));
+            $clients = $clients->map(fn($client) => new ClientResource($client));
+
+            // growth path
+            $growthpaths = GrowthPath::where('visible', true)->get();
+            $growthpaths = $clients->map(fn($growthpaths) => new GrowthPathResource($growthpaths));
 
             // // Testimonials
             // $testimonials = HappyClient::where('visible', true)->inRandomOrder()->get()->take(4);
@@ -160,10 +176,12 @@ class HomeController extends Controller
                     // "serviceList" => $serviceList,
                     // "brands" => $brands,
                     "clients" => $clients,
+                    "growthpaths" => $growthpaths,
                     // "services" => $services,
                     "activities" => $activities,
                     // "testimonials" => $testimonials,
                     "supports" => $supports,
+                    "service_categories" => $service_categories,
                 ]
             ];
             return response($response, 200);
@@ -217,7 +235,7 @@ class HomeController extends Controller
             });
 
             // Service Categories
-            $service_categories = ServiceCategory::with('services')
+            $service_categories = ServiceCategory::with('subcategories', 'services')
                 ->where('visible', true)
                 ->where('type', 'service')
                 ->get();
@@ -226,7 +244,28 @@ class HomeController extends Controller
                     "title" => $category->title,
                     "url" => $category->url,
                     "image" => secure_asset('storage/' . $category->image_small),
-                    "services" => $category->services->map(function ($service) {
+                    "subcategories" => $category->subcategories->map(function ($subcategory) {
+                        return [
+                            "title" => $subcategory->title,
+                            "url" => $subcategory->url,
+                        ];
+                    }),
+                ];
+            });
+
+            // industry Categories
+            $industry_categories = ServiceCategory::where('visible', true)
+                ->where('type', 'industry')
+                ->get();
+
+            $industry_categories = $industry_categories->map(function ($category) {
+                $services = Industry::where('category_id', $category->id)->get();
+
+                return [
+                    "title" => $category->title,
+                    "url" => $category->url,
+                    "image" => secure_asset('storage/' . $category->image_small),
+                    "services" => $services->map(function ($service) {
                         return [
                             "title" => $service->title,
                             "url" => $service->url,
@@ -234,48 +273,27 @@ class HomeController extends Controller
                     }),
                 ];
             });
-            
-            // industry Categories
-            $industry_categories = ServiceCategory::where('visible', true)
-            ->where('type', 'industry')
-            ->get();
-
-            $industry_categories = $industry_categories->map(function ($category) {
-            $services = Industry::where('category_id', $category->id)->get();
-
-            return [
-             "title" => $category->title,
-             "url" => $category->url,
-             "image" => secure_asset('storage/' . $category->image_small),
-             "services" => $services->map(function ($service) {
-              return [
-            "title" => $service->title,
-            "url" => $service->url,
-                  ];
-    }),
-];
-});
 
             // segment Categories
             $segment_categories = ServiceCategory::where('visible', true)
-            ->where('type', 'segment')
-            ->get();
+                ->where('type', 'segment')
+                ->get();
 
             $segment_categories = $segment_categories->map(function ($category) {
-            $services = ProductSegment::where('category_id', $category->id)->get();
+                $services = ProductSegment::where('category_id', $category->id)->get();
 
-            return [
-             "title" => $category->title,
-             "url" => $category->url,
-             "image" => secure_asset('storage/' . $category->image_small),
-             "services" => $services->map(function ($service) {
-              return [
-            "title" => $service->title,
-            "url" => $service->url,
-                  ];
-    }),
-];
-});
+                return [
+                    "title" => $category->title,
+                    "url" => $category->url,
+                    "image" => secure_asset('storage/' . $category->image_small),
+                    "services" => $services->map(function ($service) {
+                        return [
+                            "title" => $service->title,
+                            "url" => $service->url,
+                        ];
+                    }),
+                ];
+            });
 
             // // Solution Categories
             // $solution_categories = SolutionCategory::where('visible', true)->get();

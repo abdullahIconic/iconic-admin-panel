@@ -1,7 +1,7 @@
 @section('navbar')
     @livewire('layout.navbar', [
         'title' => 'Create',
-        'parent' => 'Services',
+        'parent' => 'Business Wings',
         'parentRoute' => 'services',
         'page' => 'create',
     ])
@@ -10,7 +10,7 @@
 <form class="body" action="{{ route('services.update', $service->id) }}" method="post" enctype="multipart/form-data">
     @method('patch')
     @csrf
-    
+
     <div class="row g-3">
         <div class="col-md-4">
             <label class="form-label" for="slogan">Slogan</label>
@@ -81,6 +81,20 @@
                 @endforeach
             </select>
             @error('category')
+            <span class="invalid-feedback" role="alert">
+                <strong>{{ $message }}</strong>
+            </span>
+            @enderror
+        </div>
+        <div class="col-md-3">
+            <label class="form-label" for="subcategory">Sub Category</label>
+            <select wire:model="subcategory" class="form-control @error('subcategory') is-invalid @enderror" name="subcategory" id="subcategory" required>
+                <option value="">-- Select Sub Category --</option>
+                @foreach($subcategories as $subcategory)
+                <option value="{{ $subcategory->id }}">{{ $subcategory->title }}</option>
+                @endforeach
+            </select>
+            @error('subcategory')
             <span class="invalid-feedback" role="alert">
                 <strong>{{ $message }}</strong>
             </span>

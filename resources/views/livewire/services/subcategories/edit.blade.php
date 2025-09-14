@@ -1,19 +1,20 @@
 @section('navbar')
     @livewire('layout.navbar', [
         'title' => 'Create',
-        'parent' => 'Business Wings',
+        'parent' => 'Business Wings Subcategories',
         'parentRoute' => 'services',
         'page' => 'create',
     ])
 @endsection
 
-<form class="body" action="{{ route('services.store') }}" method="post" enctype="multipart/form-data">
+<form class="body" action="{{ route('services.subcategories.update', $subcategory->id) }}" method="post" enctype="multipart/form-data">
+    @method('patch')
     @csrf
 
     <div class="row g-3">
         <div class="col-md-4">
             <label class="form-label" for="slogan">Slogan</label>
-            <input type="text" class="form-control @error('slogan') is-invalid @enderror" name="slogan" id="slogan" placeholder="Slogan" value="{{ old('slogan') }}" required>
+            <input wire:model="slogan" type="text" class="form-control @error('slogan') is-invalid @enderror" name="slogan" id="slogan" placeholder="Slogan" value="{{ old('slogan') }}" required>
             @error('slogan')
             <span class="invalid-feedback" role="alert">
                 <strong>{{ $message }}</strong>
@@ -38,19 +39,8 @@
             </span>
             @enderror
         </div>
-        <div class="col-md-2">
-            <label class="form-label" for="highlighted">Highlighted?</label>
-            <select class="form-control @error('highlighted') is-invalid @enderror" name="highlighted" required>
-                <option value="0">No</option>
-                <option value="1">Yes</option>
-            </select>
-            @error('highlighted')
-            <span class="invalid-feedback" role="alert">
-                <strong>{{ $message }}</strong>
-            </span>
-            @enderror
-        </div>
-        <div class="col-md-2">
+
+        <div class="col-md-4">
             <label class="form-label" for="visible">Visible?</label>
             <select wire:model="visible" class="form-control @error('visible') is-invalid @enderror" name="visible" required>
                 <option value="1">Yes</option>
@@ -62,7 +52,7 @@
             </span>
             @enderror
         </div>
-        <div class="col-md-5">
+        <div class="col-md-4">
             <label class="form-label" for="meta_title">Meta Title</label>
             <input wire:model="meta_title" type="text" class="form-control @error('meta_title') is-invalid @enderror" name="meta_title" id="meta_title" placeholder="Meta Title" value="{{ old('meta_title') }}">
             @error('meta_title')
@@ -71,7 +61,7 @@
             </span>
             @enderror
         </div>
-        <div class="col-md-3">
+        <div class="col-md-4">
             <label class="form-label" for="category">Category</label>
             <select wire:model="category" class="form-control @error('category') is-invalid @enderror" name="category" id="category" required>
                 <option value="">-- Select Category --</option>
@@ -85,23 +75,9 @@
             </span>
             @enderror
         </div>
-        <div class="col-md-3">
-            <label class="form-label" for="subcategory">Sub Category</label>
-            <select wire:model="subcategory" class="form-control @error('category') is-invalid @enderror" name="subcategory" id="subcategory" required>
-                <option value="">-- Select Sub Category --</option>
-                @foreach($subcategories as $subcategory)
-                <option value="{{ $subcategory->id }}">{{ $subcategory->title }}</option>
-                @endforeach
-            </select>
-            @error('subcategory')
-            <span class="invalid-feedback" role="alert">
-                <strong>{{ $message }}</strong>
-            </span>
-            @enderror
-        </div>
-        <div class="col-md-3">
+        <div class="col-md-4">
             <label class="form-label" for="image">Image</label>
-            <input type="file" class="form-control @error('image') is-invalid @enderror" name="image" required>
+            <input type="file" class="form-control @error('image') is-invalid @enderror" name="image">
             <small class="text-muted">Recommended Size: 500px x 500px</small>
             @error('image')
             <span class="invalid-feedback" role="alert">
@@ -111,7 +87,7 @@
         </div>
         <div class="col-md-12" wire:ignore>
             <label class="form-label" for="article">Article</label>
-            <textarea class="form-control tinymce" name="article" placeholder="Article">{{ old('article') }}</textarea>
+            <textarea wire:model="article" class="form-control tinymce" name="article" placeholder="Article">{{ old('article') }}</textarea>
             @error('article')
             <span class="invalid-feedback" role="alert">
                 <strong>{{ $message }}</strong>
@@ -137,5 +113,5 @@
             @enderror
         </div>
     </div>
-    <button class="btn btn-dark mt-3 px-5" type="submit">Store</button>
+    <button class="btn btn-dark mt-3 px-5" type="submit">Update</button>
 </form>

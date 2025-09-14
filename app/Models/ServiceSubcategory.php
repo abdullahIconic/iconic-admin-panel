@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Service extends Model
+class ServiceSubcategory extends Model
 {
     use HasFactory;
 
@@ -20,9 +20,9 @@ class Service extends Model
     {
         return $this->belongsTo(ServiceCategory::class, 'category_id');
     }
-    
-    function subcategory()
+
+    public function services()
     {
-        return $this->belongsTo(ServiceSubcategory::class, 'sub_category_id');
+        return $this->hasMany(Service::class, 'sub_category_id')->where('visible', 1);
     }
 }

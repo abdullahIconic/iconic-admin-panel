@@ -17,6 +17,7 @@ use Exception;
 use App\Models\Slider;
 use App\Models\ServiceCategory;
 use App\Models\ServiceSafety;
+use App\Models\ServiceSubcategory;
 use App\Models\ServiceWwd;
 use App\Models\Team;
 
@@ -110,10 +111,181 @@ class ServiceController extends Controller
         }
     }
 
+    // public function category($category)
+    // {
+    //     try {
+
+    //         // Section Data
+    //         $sectionData = collect(SectionData::where('page', $category)->get());
+    //         $subscriptionSectionData = collect(SectionData::where('page', 'common')->get());
+    //         $sectionData = $sectionData->merge($subscriptionSectionData);
+
+    //         $sectionData = $sectionData->map(function ($data) {
+    //             return [
+    //                 "page" => $data->page,
+    //                 "section" => $data->section,
+    //                 "title" => $data->title,
+    //                 "url" => $data->url,
+    //                 "label" => $data->label,
+    //                 "slogan" => $data->slogan,
+    //                 "overview" => $data->overview,
+    //                 "image" => env('APP_ENV') == 'local' ? asset('storage/' . $data->image) : secure_asset('storage/' . $data->image),
+    //                 "image_alt" => $data->image_alt,
+    //             ];
+    //         });
+
+    //         if ($category == 'rental') {
+    //             // Slider
+    //             $sliders = Slider::where('page_name', $category)
+    //                 ->where('visible', 1)
+    //                 ->orderBy('position', 'asc')
+    //                 ->get();
+
+    //             $sliders = $sliders->map(fn ($slider) => new SliderResource($slider));
+
+
+    //             // Category
+    //             $rental = ServiceCategory::where('url', $category)->firstOrFail();
+
+    //             // Services
+    //             $services = Service::where('category_id', $rental->id)
+    //                 ->where('visible', true)
+    //                 ->get();
+    //             $services = $services->map(function ($service) {
+    //                 return [
+    //                     "id" => $service->id,
+    //                     "slogan" => $service->slogan,
+    //                     "title" => $service->title,
+    //                     "url" => $service->url,
+    //                     "meta_description" => $service->meta_description,
+    //                     "image" => asset('storage/' . $service->image_medium)
+    //                 ];
+    //             });
+
+    //             // Tabs
+    //             $tabs = RentalTab::where('visible', true)->get();
+
+    //             // HappyClients
+    //             $testimonials = HappyClient::where('happy_for', $category)->inRandomOrder()->get()->take(3);
+    //             $testimonials = $testimonials->map(function ($testimonial) {
+    //                 return [
+    //                     "name" => $testimonial->name,
+    //                     "comment" => $testimonial->comment,
+    //                 ];
+    //             });
+
+    //             $response = [
+    //                 "status" => 1,
+    //                 "message" => "success",
+    //                 "data" => [
+    //                     "sectionData" => $sectionData,
+    //                     "sliders" => $sliders,
+    //                     "category" => $rental,
+    //                     "services" => $services ?? [],
+    //                     "tabs" => $tabs,
+    //                     "testimonials" => $testimonials,
+    //                 ]
+    //             ];
+
+    //             return response($response, 200);
+    //         } else {
+
+    //             // Slider
+    //             $sliders = Slider::where('page_name', $category)
+    //                 ->where('visible', 1)
+    //                 ->orderBy('position', 'asc')
+    //                 ->get();
+    //             $sliders = $sliders->map(fn ($slider) => new SliderResource($slider));
+
+    //             // Counters
+    //             $counters = Counter::where('counter_for', $category)->get();
+    //             $counters = $counters->map(function ($counter) {
+    //                 return [
+    //                     "label" => $counter->label,
+    //                     "digit" => $counter->digit,
+    //                 ];
+    //             });
+
+    //             // Category
+    //             $category = ServiceCategory::where('url', $category)->firstOrFail();
+
+    //             // Best Features Images
+    //             $bestFeaturesImages = $category?->feature_images()->where('visible', true)->get();
+    //             $bestFeaturesImages = $bestFeaturesImages->map(function ($image) {
+    //                 return [
+    //                     "title" => $image->title,
+    //                     "image" => env('APP_ENV') == 'local' ? asset('storage/' . $image->image) : secure_asset('storage/' . $image->image),
+    //                 ];
+    //             });
+
+    //             // Services
+    //             $services = $category->services()->where('visible', 1)->get();
+    //             $services = $services->map(function ($service) {
+    //                 return [
+    //                     'title' => $service->title,
+    //                     'url' => $service->url,
+    //                     'description' => $service->description,
+    //                     'image' => env('APP_ENV') == 'local' ? asset('storage/' . $service->image_medium) : secure_asset('storage/' . $service->image_medium),
+    //                 ];
+    //             });
+
+    //             // Experts
+    //             $experts = Team::where('expert', 1)->where(function ($query) use ($category) {
+    //                 if ($category->url == 'calibration' || $category->url == 'lightning-protection-system') {
+    //                     return $query->where('expert_in', $category->url);
+    //                 } else {
+    //                     return $query->where('expert_in', 'service');
+    //                 }
+    //             })->where('visible', 1)->get();
+
+    //             $experts = $experts->map(function ($expert) {
+    //                 return [
+    //                     'name' => $expert->name,
+    //                     'email' => $expert->email,
+    //                     'phone' => $expert->phone,
+    //                     'image' => env('APP_ENV') == 'local' ? asset('storage/' . $expert->image_medium) : secure_asset('storage/' . $expert->image_medium),
+    //                 ];
+    //             });
+
+    //             // HappyClients
+    //             $testimonials = HappyClient::where('happy_for', $category->url)->get();
+    //             $testimonials = $testimonials->map(function ($testimonial) {
+    //                 return [
+    //                     "name" => $testimonial->name,
+    //                     "designation" => $testimonial->designation,
+    //                     "company" => $testimonial->company,
+    //                     "comment" => $testimonial->comment,
+    //                 ];
+    //             });
+
+    //             $response = [
+    //                 "status" => 1,
+    //                 "message" => "success",
+    //                 "data" => [
+    //                     "sectionData" => $sectionData,
+    //                     "bestFeaturesImages" => $bestFeaturesImages ?? [],
+    //                     "sliders" => $sliders,
+    //                     "counters" => $counters,
+    //                     "category" => $category,
+    //                     "services" => $services ?? [],
+    //                     "experts" => $experts ?? [],
+    //                     "testimonials" => $testimonials ?? [],
+    //                 ]
+    //             ];
+    //             return response($response, 200);
+    //         }
+    //     } catch (Exception $exception) {
+    //         $response = [
+    //             "status" => 0,
+    //             "message" => "failed"
+    //         ];
+    //         return response($response, 500);
+    //     }
+    // }
+
     public function category($category)
     {
         try {
-
             // Section Data
             $sectionData = collect(SectionData::where('page', $category)->get());
             $subscriptionSectionData = collect(SectionData::where('page', 'common')->get());
@@ -133,23 +305,21 @@ class ServiceController extends Controller
                 ];
             });
 
-            if ($category == 'rental') {
-                // Slider
-                $sliders = Slider::where('page_name', $category)
-                    ->where('visible', 1)
-                    ->orderBy('position', 'asc')
-                    ->get();
+            // Category fetch
+            $categoryModel = ServiceCategory::where('url', $category)->firstOrFail();
 
-                $sliders = $sliders->map(fn ($slider) => new SliderResource($slider));
+            // ✅ Subcategories fetch
+            $subcategories = ServiceSubcategory::where('category_id', $categoryModel->id)
+                ->where('visible', 1)
+                ->orderBy('position', 'asc')
+                ->get();
 
-
-                // Category
-                $rental = ServiceCategory::where('url', $category)->firstOrFail();
-
-                // Services
-                $services = Service::where('category_id', $rental->id)
+            // ✅ Services nested under each subcategory
+            $subcategories = $subcategories->map(function ($subcat) {
+                $services = Service::where('sub_category_id', $subcat->id)
                     ->where('visible', true)
                     ->get();
+
                 $services = $services->map(function ($service) {
                     return [
                         "id" => $service->id,
@@ -157,87 +327,52 @@ class ServiceController extends Controller
                         "title" => $service->title,
                         "url" => $service->url,
                         "meta_description" => $service->meta_description,
-                        "image" => asset('storage/' . $service->image_medium)
+                        "image" => env('APP_ENV') == 'local' ? asset('storage/' . $service->image_medium) : secure_asset('storage/' . $service->image_medium)
                     ];
                 });
 
-                // Tabs
-                $tabs = RentalTab::where('visible', true)->get();
-
-                // HappyClients
-                $testimonials = HappyClient::where('happy_for', $category)->inRandomOrder()->get()->take(3);
-                $testimonials = $testimonials->map(function ($testimonial) {
-                    return [
-                        "name" => $testimonial->name,
-                        "comment" => $testimonial->comment,
-                    ];
-                });
-
-                $response = [
-                    "status" => 1,
-                    "message" => "success",
-                    "data" => [
-                        "sectionData" => $sectionData,
-                        "sliders" => $sliders,
-                        "category" => $rental,
-                        "services" => $services ?? [],
-                        "tabs" => $tabs,
-                        "testimonials" => $testimonials,
-                    ]
+                return [
+                    "id" => $subcat->id,
+                    "title" => $subcat->title,
+                    "url" => $subcat->url,
+                    "description" => $subcat->description,
+                    "image" => env('APP_ENV') == 'local' ? asset('storage/' . $subcat->image_medium) : secure_asset('storage/' . $subcat->image_medium),
+                    "services" => $services
                 ];
+            });
 
-                return response($response, 200);
-            } else {
+            // Sliders, Counters, Experts, Testimonials same as before
+            $sliders = Slider::where('page_name', $category)
+                ->where('visible', 1)
+                ->orderBy('position', 'asc')
+                ->get();
+            $sliders = $sliders->map(fn($slider) => new SliderResource($slider));
 
-                // Slider
-                $sliders = Slider::where('page_name', $category)
-                    ->where('visible', 1)
-                    ->orderBy('position', 'asc')
-                    ->get();
-                $sliders = $sliders->map(fn ($slider) => new SliderResource($slider));
+            $counters = Counter::where('counter_for', $category)->get()->map(function ($counter) {
+                return [
+                    "label" => $counter->label,
+                    "digit" => $counter->digit,
+                ];
+            });
 
-                // Counters
-                $counters = Counter::where('counter_for', $category)->get();
-                $counters = $counters->map(function ($counter) {
-                    return [
-                        "label" => $counter->label,
-                        "digit" => $counter->digit,
-                    ];
-                });
+            $bestFeaturesImages = $categoryModel?->feature_images()->where('visible', true)->get()->map(function ($image) {
+                return [
+                    "title" => $image->title,
+                    "image" => env('APP_ENV') == 'local' ? asset('storage/' . $image->image) : secure_asset('storage/' . $image->image),
+                ];
+            });
 
-                // Category
-                $category = ServiceCategory::where('url', $category)->firstOrFail();
-
-                // Best Features Images
-                $bestFeaturesImages = $category?->feature_images()->where('visible', true)->get();
-                $bestFeaturesImages = $bestFeaturesImages->map(function ($image) {
-                    return [
-                        "title" => $image->title,
-                        "image" => env('APP_ENV') == 'local' ? asset('storage/' . $image->image) : secure_asset('storage/' . $image->image),
-                    ];
-                });
-
-                // Services
-                $services = $category->services()->where('visible', 1)->get();
-                $services = $services->map(function ($service) {
-                    return [
-                        'title' => $service->title,
-                        'url' => $service->url,
-                        'description' => $service->description,
-                        'image' => env('APP_ENV') == 'local' ? asset('storage/' . $service->image_medium) : secure_asset('storage/' . $service->image_medium),
-                    ];
-                });
-
-                // Experts
-                $experts = Team::where('expert', 1)->where(function ($query) use ($category) {
-                    if ($category->url == 'calibration' || $category->url == 'lightning-protection-system') {
-                        return $query->where('expert_in', $category->url);
+            $experts = Team::where('expert', 1)
+                ->where(function ($query) use ($categoryModel) {
+                    if ($categoryModel->url == 'calibration' || $categoryModel->url == 'lightning-protection-system') {
+                        return $query->where('expert_in', $categoryModel->url);
                     } else {
                         return $query->where('expert_in', 'service');
                     }
-                })->where('visible', 1)->get();
-
-                $experts = $experts->map(function ($expert) {
+                })
+                ->where('visible', 1)
+                ->get()
+                ->map(function ($expert) {
                     return [
                         'name' => $expert->name,
                         'email' => $expert->email,
@@ -246,41 +381,126 @@ class ServiceController extends Controller
                     ];
                 });
 
-                // HappyClients
-                $testimonials = HappyClient::where('happy_for', $category->url)->get();
-                $testimonials = $testimonials->map(function ($testimonial) {
-                    return [
-                        "name" => $testimonial->name,
-                        "designation" => $testimonial->designation,
-                        "company" => $testimonial->company,
-                        "comment" => $testimonial->comment,
-                    ];
-                });
-
-                $response = [
-                    "status" => 1,
-                    "message" => "success",
-                    "data" => [
-                        "sectionData" => $sectionData,
-                        "bestFeaturesImages" => $bestFeaturesImages ?? [],
-                        "sliders" => $sliders,
-                        "counters" => $counters,
-                        "category" => $category,
-                        "services" => $services ?? [],
-                        "experts" => $experts ?? [],
-                        "testimonials" => $testimonials ?? [],
-                    ]
+            $testimonials = HappyClient::where('happy_for', $categoryModel->url)->get()->map(function ($testimonial) {
+                return [
+                    "name" => $testimonial->name,
+                    "designation" => $testimonial->designation,
+                    "company" => $testimonial->company,
+                    "comment" => $testimonial->comment,
                 ];
-                return response($response, 200);
-            }
-        } catch (Exception $exception) {
+            });
+
             $response = [
-                "status" => 0,
-                "message" => "failed"
+                "status" => 1,
+                "message" => "success",
+                "data" => [
+                    "sectionData" => $sectionData,
+                    "bestFeaturesImages" => $bestFeaturesImages ?? [],
+                    "sliders" => $sliders,
+                    "counters" => $counters,
+                    "category" => $categoryModel,
+                    "subcategories" => $subcategories, // ✅ নতুন সাবক্যাটাগরি সহ সার্ভিস পাঠানো হচ্ছে
+                    "experts" => $experts ?? [],
+                    "testimonials" => $testimonials ?? [],
+                ]
             ];
-            return response($response, 500);
+
+            return response($response, 200);
+        } catch (\Exception $exception) {
+            return response([
+                "status" => 0,
+                "message" => "failed",
+                "error" => $exception->getMessage()
+            ], 500);
         }
     }
+
+
+    public function subcategory($subcategoryUrl)
+    {
+        try {
+            // 🔹 Section Data
+            $sectionData = SectionData::whereIn('page', [$subcategoryUrl, 'common'])->get()->map(function ($data) {
+                return [
+                    "page" => $data->page,
+                    "section" => $data->section,
+                    "title" => $data->title,
+                    "url" => $data->url,
+                    "label" => $data->label,
+                    "slogan" => $data->slogan,
+                    "overview" => $data->overview,
+                    "image" => $data->image ? (env('APP_ENV') == 'local' ? asset('storage/' . $data->image) : secure_asset('storage/' . $data->image)) : null,
+                    "image_alt" => $data->image_alt,
+                ];
+            });
+
+            // 🔹 Sliders
+            $sliders = Slider::where('page_name', $subcategoryUrl)
+                ->where('visible', 1)
+                ->orderBy('position', 'asc')
+                ->get()
+                ->map(fn($slider) => [
+                    "slogan" => $slider->slogan,
+                    "title" => $slider->title,
+                    "overview" => $slider->overview,
+                    "link" => $slider->link,
+                    "link_text" => $slider->link_text,
+                    "image" => $slider->image ? (env('APP_ENV') == 'local' ? asset('storage/' . $slider->image) : secure_asset('storage/' . $slider->image)) : null,
+                ]);
+
+            // 🔹 Counters
+            $counters = Counter::where('counter_for', $subcategoryUrl)->get()->map(function ($counter) {
+                return [
+                    "label" => $counter->label,
+                    "digit" => $counter->digit,
+                ];
+            });
+
+            // 🔹 Subcategory fetch
+            $subcategory = ServiceSubcategory::where('url', $subcategoryUrl)->first();
+            if (!$subcategory) {
+                return response()->json([
+                    "status" => 0,
+                    "message" => "failed",
+                    "error" => "Subcategory not found"
+                ], 404);
+            }
+
+
+
+            // 🔹 Services under this subcategory
+            $services = $subcategory->services()->get()->map(function ($service) {
+                return [
+                    "id" => $service->id,
+                    "title" => $service->title,
+                    "short_description" => $service->short_description,
+                    "url" => $service->url,
+                    "image" => $service->image_medium ? (env('APP_ENV') == 'local' ? asset('storage/' . $service->image_medium) : secure_asset('storage/' . $service->image_medium)) : null,
+                ];
+            });
+
+            // 🔹 Response
+            return response()->json([
+                "status" => 1,
+                "message" => "success",
+                "data" => [
+                    "sectionData" => $sectionData,
+                    "sliders" => $sliders,
+                    "counters" => $counters,
+                    "subcategory" => $subcategory,
+                    "services" => $services,
+                ]
+            ], 200);
+        } catch (\Exception $exception) {
+            return response()->json([
+                "status" => 0,
+                "message" => "failed",
+                "error" => $exception->getMessage()
+            ], 500);
+        }
+    }
+
+
     public function icategory($category)
     {
         try {
@@ -304,47 +524,47 @@ class ServiceController extends Controller
                 ];
             });
 
-                // Slider
-                $sliders = Slider::where('page_name', $category)
-                    ->where('visible', 1)
-                    ->orderBy('position', 'asc')
-                    ->get();
-                $sliders = $sliders->map(fn ($slider) => new SliderResource($slider));
+            // Slider
+            $sliders = Slider::where('page_name', $category)
+                ->where('visible', 1)
+                ->orderBy('position', 'asc')
+                ->get();
+            $sliders = $sliders->map(fn($slider) => new SliderResource($slider));
 
-                // Counters
-                $counters = Counter::where('counter_for', $category)->get();
-                $counters = $counters->map(function ($counter) {
-                    return [
-                        "label" => $counter->label,
-                        "digit" => $counter->digit,
-                    ];
-                });
+            // Counters
+            $counters = Counter::where('counter_for', $category)->get();
+            $counters = $counters->map(function ($counter) {
+                return [
+                    "label" => $counter->label,
+                    "digit" => $counter->digit,
+                ];
+            });
 
-                // Category
-                $category = ServiceCategory::where('url', $category)->firstOrFail();
+            // Category
+            $category = ServiceCategory::where('url', $category)->firstOrFail();
 
-                // Best Features Images
-                $bestFeaturesImages = $category?->feature_images()->where('visible', true)->get();
-                $bestFeaturesImages = $bestFeaturesImages->map(function ($image) {
-                    return [
-                        "title" => $image->title,
-                        "image" => env('APP_ENV') == 'local' ? asset('storage/' . $image->image) : secure_asset('storage/' . $image->image),
-                    ];
-                });
+            // Best Features Images
+            $bestFeaturesImages = $category?->feature_images()->where('visible', true)->get();
+            $bestFeaturesImages = $bestFeaturesImages->map(function ($image) {
+                return [
+                    "title" => $image->title,
+                    "image" => env('APP_ENV') == 'local' ? asset('storage/' . $image->image) : secure_asset('storage/' . $image->image),
+                ];
+            });
 
-                // Services
-                // $services = $category->services()->where('visible', 1)->get();
-                // $services = $services->map(function ($service) {
-                //     return [
-                //         'title' => $service->title,
-                //         'url' => $service->url,
-                //         'description' => $service->description,
-                //         'image' => env('APP_ENV') == 'local' ? asset('storage/' . $service->image_medium) : secure_asset('storage/' . $service->image_medium),
-                //     ];
-                // });
+            // Services
+            // $services = $category->services()->where('visible', 1)->get();
+            // $services = $services->map(function ($service) {
+            //     return [
+            //         'title' => $service->title,
+            //         'url' => $service->url,
+            //         'description' => $service->description,
+            //         'image' => env('APP_ENV') == 'local' ? asset('storage/' . $service->image_medium) : secure_asset('storage/' . $service->image_medium),
+            //     ];
+            // });
 
-        // industries 
-           $industries = Industry::where('visible', 1)->where('category_id', $category->id)->get();
+            // industries
+            $industries = Industry::where('visible', 1)->where('category_id', $category->id)->get();
             $industries = $industries->map(function ($industry) {
                 return [
                     "title" => $industry->title,
@@ -356,50 +576,50 @@ class ServiceController extends Controller
 
 
 
-                // Experts
-                $experts = Team::where('expert', 1)->where(function ($query) use ($category) {
-                    if ($category->url == 'calibration' || $category->url == 'lightning-protection-system') {
-                        return $query->where('expert_in', $category->url);
-                    } else {
-                        return $query->where('expert_in', 'service');
-                    }
-                })->where('visible', 1)->get();
+            // Experts
+            $experts = Team::where('expert', 1)->where(function ($query) use ($category) {
+                if ($category->url == 'calibration' || $category->url == 'lightning-protection-system') {
+                    return $query->where('expert_in', $category->url);
+                } else {
+                    return $query->where('expert_in', 'service');
+                }
+            })->where('visible', 1)->get();
 
-                $experts = $experts->map(function ($expert) {
-                    return [
-                        'name' => $expert->name,
-                        'email' => $expert->email,
-                        'phone' => $expert->phone,
-                        'image' => env('APP_ENV') == 'local' ? asset('storage/' . $expert->image_medium) : secure_asset('storage/' . $expert->image_medium),
-                    ];
-                });
-
-                // HappyClients
-                $testimonials = HappyClient::where('happy_for', $category->url)->get();
-                $testimonials = $testimonials->map(function ($testimonial) {
-                    return [
-                        "name" => $testimonial->name,
-                        "designation" => $testimonial->designation,
-                        "company" => $testimonial->company,
-                        "comment" => $testimonial->comment,
-                    ];
-                });
-
-                $response = [
-                    "status" => 1,
-                    "message" => "success",
-                    "data" => [
-                        "sectionData" => $sectionData,
-                        "bestFeaturesImages" => $bestFeaturesImages ?? [],
-                        "sliders" => $sliders,
-                        "counters" => $counters,
-                        "category" => $category,
-                        "services" => $industries ?? [],
-                        "experts" => $experts ?? [],
-                        "testimonials" => $testimonials ?? [],
-                    ]
+            $experts = $experts->map(function ($expert) {
+                return [
+                    'name' => $expert->name,
+                    'email' => $expert->email,
+                    'phone' => $expert->phone,
+                    'image' => env('APP_ENV') == 'local' ? asset('storage/' . $expert->image_medium) : secure_asset('storage/' . $expert->image_medium),
                 ];
-                return response($response, 200);
+            });
+
+            // HappyClients
+            $testimonials = HappyClient::where('happy_for', $category->url)->get();
+            $testimonials = $testimonials->map(function ($testimonial) {
+                return [
+                    "name" => $testimonial->name,
+                    "designation" => $testimonial->designation,
+                    "company" => $testimonial->company,
+                    "comment" => $testimonial->comment,
+                ];
+            });
+
+            $response = [
+                "status" => 1,
+                "message" => "success",
+                "data" => [
+                    "sectionData" => $sectionData,
+                    "bestFeaturesImages" => $bestFeaturesImages ?? [],
+                    "sliders" => $sliders,
+                    "counters" => $counters,
+                    "category" => $category,
+                    "services" => $industries ?? [],
+                    "experts" => $experts ?? [],
+                    "testimonials" => $testimonials ?? [],
+                ]
+            ];
+            return response($response, 200);
         } catch (Exception $exception) {
             $response = [
                 "status" => 0,
@@ -439,7 +659,7 @@ class ServiceController extends Controller
                     ->where('visible', 1)
                     ->orderBy('position', 'asc')
                     ->get();
-                $sliders = $sliders->map(fn ($slider) => new SliderResource($slider));
+                $sliders = $sliders->map(fn($slider) => new SliderResource($slider));
 
                 // Cards
                 $cards = LpsCard::where('page_name', $url)->where('visible', true)->get();
@@ -479,26 +699,38 @@ class ServiceController extends Controller
 
                 return response($response, 200);
             } else {
+
                 // Service
                 $service = Service::where('url', $url)
                     ->where('visible', 1)
                     ->first();
 
+                if (!$service) {
+                    return response()->json([
+                        "status" => 0,
+                        "message" => "Service not found",
+                    ], 404);
+                }
+
                 // Service Categories
                 $categories = ServiceCategory::where('visible', 1)->get();
 
-                $relatedServices = $service->category->services()->where('visible', true)->get();
-                $relatedServices = $relatedServices->map(function ($service) {
+                // Related Services
+                $relatedServices = $service->category
+                    ? $service->category->services()->where('visible', true)->get()
+                    : collect([]);
+
+                $relatedServices = $relatedServices->map(function ($related) {
                     return [
-                        'created_at' => $service->created_at->format('M d, Y'),
-                        'duration' => readingTime($service->article),
-                        "title" => $service->title,
-                        "url" => $service->url,
-                        "category_url" => $service->category->url,
+                        'created_at' => $related->created_at->format('M d, Y'),
+                        'duration' => readingTime($related->article),
+                        "title" => $related->title,
+                        "url" => $related->url,
+                        "category_url" => $related->category->url,
                     ];
                 });
 
-                $service = [
+                $serviceData = [
                     'category' => $service->category,
                     'created_at' => $service->created_at->format('M d, Y'),
                     'duration' => readingTime($service->article),
@@ -508,21 +740,21 @@ class ServiceController extends Controller
                     "meta_title" => $service->meta_title,
                     "meta_description" => $service->meta_description,
                     "meta_keywords" => $service->meta_keywords,
-                    'image' => env('APP_ENV') == 'local' ? asset('storage/' . $service->image) : secure_asset('storage/' . $service->image),
+                    'image' => env('APP_ENV') == 'local'
+                        ? asset('storage/' . $service->image)
+                        : secure_asset('storage/' . $service->image),
                 ];
 
-                $response = [
+                return response()->json([
                     "status" => 1,
                     "message" => "success",
                     "data" => [
-                        "service" => $service,
-                        "relatedServices" => $relatedServices ?? [],
+                        "service" => $serviceData,
+                        "relatedServices" => $relatedServices,
                         "categories" => $categories,
                         "tags" => $this->tags()
                     ]
-                ];
-
-                return response($response, 200);
+                ], 200);
             }
         } catch (Exception $exception) {
             $response = [
@@ -535,51 +767,51 @@ class ServiceController extends Controller
     public function iservice($url)
     {
         try {
-                // Service
-                $service = Industry::where('url', $url)
-                    ->where('visible', 1)
-                    ->first();
+            // Service
+            $service = Industry::where('url', $url)
+                ->where('visible', 1)
+                ->first();
 
-                // Service Categories
-                $categories = ServiceCategory::where('visible', 1)->get();
+            // Service Categories
+            $categories = ServiceCategory::where('visible', 1)->get();
 
             //   $industries = Industry::where('visible', 1)->where('category_id', $category->id)->get();
-                $relatedServices =  Industry::where('visible', 1)->where('category_id', $service->category_id)->get();
-                $relatedServices = $relatedServices->map(function ($service) {
-                    return [
-                        'created_at' => $service->created_at->format('M d, Y'),
-                        'duration' => readingTime($service->article),
-                        "title" => $service->title,
-                        "url" => $service->url,
-                        "category_url" => $service->category->url,
-                    ];
-                });
-
-                $service = [
-                    'category' => $service->category,
+            $relatedServices =  Industry::where('visible', 1)->where('category_id', $service->category_id)->get();
+            $relatedServices = $relatedServices->map(function ($service) {
+                return [
                     'created_at' => $service->created_at->format('M d, Y'),
                     'duration' => readingTime($service->article),
-                    'title' => $service->title,
-                    'url' => $service->url,
-                    'article' => $service->article,
-                    "meta_title" => $service->meta_title,
-                    "meta_description" => $service->meta_description,
-                    "meta_keywords" => $service->meta_keywords,
-                    'image' => env('APP_ENV') == 'local' ? asset('storage/' . $service->image) : secure_asset('storage/' . $service->image),
+                    "title" => $service->title,
+                    "url" => $service->url,
+                    "category_url" => $service->category->url,
                 ];
+            });
 
-                $response = [
-                    "status" => 1,
-                    "message" => "success",
-                    "data" => [
-                        "service" => $service,
-                        "relatedServices" => $relatedServices ?? [],
-                        "categories" => $categories,
-                        "tags" => $this->tags()
-                    ]
-                ];
+            $service = [
+                'category' => $service->category,
+                'created_at' => $service->created_at->format('M d, Y'),
+                'duration' => readingTime($service->article),
+                'title' => $service->title,
+                'url' => $service->url,
+                'article' => $service->article,
+                "meta_title" => $service->meta_title,
+                "meta_description" => $service->meta_description,
+                "meta_keywords" => $service->meta_keywords,
+                'image' => env('APP_ENV') == 'local' ? asset('storage/' . $service->image) : secure_asset('storage/' . $service->image),
+            ];
 
-                return response($response, 200);
+            $response = [
+                "status" => 1,
+                "message" => "success",
+                "data" => [
+                    "service" => $service,
+                    "relatedServices" => $relatedServices ?? [],
+                    "categories" => $categories,
+                    "tags" => $this->tags()
+                ]
+            ];
+
+            return response($response, 200);
         } catch (Exception $exception) {
             $response = [
                 "status" => 0,

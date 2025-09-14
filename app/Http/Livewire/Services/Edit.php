@@ -6,6 +6,7 @@ use Livewire\Component;
 use Str;
 use App\Models\Service;
 use App\Models\ServiceCategory as Category;
+use App\Models\ServiceSubcategory as SubCategory;
 
 class Edit extends Component
 {
@@ -13,6 +14,7 @@ class Edit extends Component
         $visible,
         $highlighted,
         $category,
+        $subcategory,
         $slogan,
         $title,
         $url,
@@ -21,15 +23,16 @@ class Edit extends Component
         $meta_description,
         $meta_keywords
     ;
-        
-    public $service, $categories = [];
 
-    public function mount(Service $service)
+    public $service, $categories, $subcategories = [];
+
+     public function mount(Service $service)
     {
         // Service Data
         $this->visible = $service->visible;
         $this->highlighted = $service->highlighted;
         $this->category = $service->category_id;
+        $this->subcategory = $service->sub_category_id;
         $this->slogan = $service->slogan;
         $this->title = $service->title;
         $this->url = $service->url;
@@ -40,8 +43,22 @@ class Edit extends Component
 
         // Other Data
         $this->service = $service;
-        $this->categories = Category::where('visible', 1)->get();
+        $this->categories = Category::where('visible', 1)->where('type', 'service')->get();
+
+        $this->subcategories = SubCategory::where('visible', 1)
+                                ->where('category_id', $this->category)
+                                ->get();
     }
+
+    public function updatedCategory($categoryId)
+    {
+        $this->subcategories = SubCategory::where('visible', 1)
+                                ->where('category_id', $categoryId)
+                                ->get();
+
+        $this->subcategory = null;
+    }
+
 
     public function updatedTitle()
     {

@@ -1,24 +1,24 @@
 <?php
 
-namespace App\Http\Livewire\Services;
+namespace App\Http\Livewire\Services\Subcategories;
 
 use Livewire\Component;
 use Livewire\WithPagination;
 
-use App\Models\Service;
+use App\Models\ServiceSubcategory as Category;
 
 class Index extends Component
 {
     use WithPagination;
     protected $paginationTheme = 'bootstrap';
 
-    public $qty = 20;
+    public $qty = 12;
     public $keyword = '';
-    public $totalServices;
+    public $totalCategories;
 
     public function mount()
     {
-        $this->totalServices = Service::count();
+        $this->totalCategories = Category::count();
     }
 
     public function updatingQty()
@@ -33,12 +33,12 @@ class Index extends Component
 
     public function render()
     {
-        $this->totalServices = Service::where(function ($query) {
+        $this->totalCategories = Category::where(function ($query) {
             $query->where('title', 'like', '%'.$this->keyword.'%');
         })->count();
 
-        return view('livewire.services.index', [
-            'services' => Service::where(function ($query) {
+        return view('livewire.services.subcategories.index', [
+            'categories' => Category::where(function ($query) {
                 $query->where('title', 'like', '%'.$this->keyword.'%');
             })->paginate($this->qty)
         ])->extends('layouts.panel');

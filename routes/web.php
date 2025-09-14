@@ -1,4 +1,5 @@
 <?php
+
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 // use Artisan;
@@ -32,6 +33,7 @@ Route::middleware('auth')
             ->name('services.')
             ->group(function () {
                 Route::resource('categories', ServiceCategoryController::class)->only(['store', 'update']);
+                Route::resource('subcategories', ServiceSubCategoryController::class)->only(['store', 'update']);
                 Route::resource('best-feature-images', BestFeatureImageController::class)->only(['store', 'update']);
                 Route::resource('what-we-delivered', ServiceWwdController::class)->only(['store', 'update']);
                 Route::resource('safety', ServiceSafetyController::class)->only(['store', 'update']);
@@ -57,7 +59,7 @@ Route::middleware('auth')
                 Route::prefix('segments')
                     ->name('segments.')
                     ->group(function () {
-                     
+
                         Route::resource('categories', SegmentCategoryController::class)->only(['store', 'update']);
                         Route::resource('solutions', SegmentSolutionController::class)->only(['store', 'update']);
                         Route::resource('projects', SegmentProjectController::class)->only(['store', 'update']);
@@ -116,6 +118,7 @@ Route::middleware('auth')
 
         Route::resource('service-list', ServiceListController::class)->only(['store', 'update']);
         Route::resource('clients', ClientController::class)->only(['store', 'update']);
+        Route::resource('growthpaths', GrowthPathController::class)->only(['store', 'update']);
         Route::resource('happy-clients', HappyClientController::class)->only(['store', 'update']);
         Route::resource('offers', OfferController::class)->only(['store', 'update']);
         Route::resource('popup', PopupController::class)->only(['store', 'update']);
@@ -131,6 +134,7 @@ Route::middleware('auth')
 Route::middleware('auth')
     ->namespace('App\Http\Livewire')
     ->group(function () {
+        /* Service Routes */
         Route::namespace('Services')
             ->prefix('services')
             ->name('services.')
@@ -148,6 +152,16 @@ Route::middleware('auth')
                         Route::get('create', Create::class)->name('create');
                         Route::get('show/{category}', Show::class)->name('show');
                         Route::get('edit/{category}', Edit::class)->name('edit');
+                    });
+
+                Route::namespace('Subcategories')
+                    ->prefix('subcategories')
+                    ->name('subcategories.')
+                    ->group(function () {
+                        Route::get('/', Index::class)->name('index');
+                        Route::get('create', Create::class)->name('create');
+                        Route::get('show/{subcategory}', Show::class)->name('show');
+                        Route::get('edit/{subcategory}', Edit::class)->name('edit');
                     });
 
                 Route::namespace('ServiceWwd')
@@ -281,7 +295,7 @@ Route::middleware('auth')
                     ->name('segments.')
                     ->group(function () {
                         Route::get('/', Index::class)->name('index');
-                     
+
                         Route::get('create', Create::class)->name('create');
                         Route::get('show/{segment}', Show::class)->name('show');
                         Route::get('edit/{segment}', Edit::class)->name('edit');
@@ -387,7 +401,7 @@ Route::middleware('auth')
                         Route::get('edit/{solution}', Edit::class)->name('edit');
                     });
 
-                Route::get('timeline', Timeline\Index::class)->name('timeline.index');
+                Route::get('timeline', Index::class)->name('timeline.index');
                 Route::namespace('Timeline')
                     ->prefix('timeline')
                     ->name('timeline.')
@@ -446,6 +460,16 @@ Route::middleware('auth')
                 Route::get('create', Create::class)->name('create');
                 Route::get('show/{client}', Show::class)->name('show');
                 Route::get('edit/{client}', Edit::class)->name('edit');
+            });
+
+        Route::namespace('GrowthPaths')
+            ->prefix('growthpaths')
+            ->name('growthpaths.')
+            ->group(function () {
+                Route::get('/', Index::class)->name('index');
+                Route::get('create', Create::class)->name('create');
+                Route::get('show/{growthpath}', Show::class)->name('show');
+                Route::get('edit/{growthpath}', Edit::class)->name('edit');
             });
 
         Route::namespace('HappyClients')

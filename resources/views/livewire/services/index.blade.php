@@ -1,7 +1,7 @@
 @section('navbar')
 @livewire('layout.navbar', [
 'title' => 'List',
-'parent' => 'Services',
+'parent' => 'Business Wing',
 'parentRoute' => 'services',
 'page' => 'index',
 ])
@@ -9,7 +9,7 @@
 
 <div>
     <div class="mb-3">
-        Total {{ $totalServices }} Service(s)
+        Total {{ $totalServices }} Business Wing(s)
     </div>
     <div class="table-responsive-sm">
         <div class="d-flex gap-5 mb-3">
@@ -33,6 +33,7 @@
                     <th scope="col">Title</th>
                     <th scope="col">Visible</th>
                     <th scope="col">Category</th>
+                    <th scope="col">Sub Category</th>
                     <th scope="col">Action</th>
                 </tr>
             </thead>
@@ -45,6 +46,7 @@
                     <td>{{$service->title}}</td>
                     <td>{{$service->visible ? "Yes" : "No"}}</td>
                     <td>{{$service->category?->title}}</td>
+                    <td>{{$service->subcategory?->title}}</td>
                     <td>
                         <a href="{{route('services.show', $service->id)}}" class="btn bg-success text-white">View</a>
                         <a href="{{route('services.edit', $service->id)}}" class="btn bg-warning">Edit</a>

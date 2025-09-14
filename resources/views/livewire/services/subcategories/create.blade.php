@@ -1,15 +1,14 @@
 @section('navbar')
     @livewire('layout.navbar', [
         'title' => 'Create',
-        'parent' => 'Business Wings',
-        'parentRoute' => 'services',
+        'parent' => 'Business Wings Subcategories',
+        'parentRoute' => 'services.subcategories',
         'page' => 'create',
     ])
 @endsection
 
-<form class="body" action="{{ route('services.store') }}" method="post" enctype="multipart/form-data">
+<form class="body" action="{{ route('services.subcategories.store') }}" method="post" enctype="multipart/form-data">
     @csrf
-
     <div class="row g-3">
         <div class="col-md-4">
             <label class="form-label" for="slogan">Slogan</label>
@@ -38,19 +37,8 @@
             </span>
             @enderror
         </div>
-        <div class="col-md-2">
-            <label class="form-label" for="highlighted">Highlighted?</label>
-            <select class="form-control @error('highlighted') is-invalid @enderror" name="highlighted" required>
-                <option value="0">No</option>
-                <option value="1">Yes</option>
-            </select>
-            @error('highlighted')
-            <span class="invalid-feedback" role="alert">
-                <strong>{{ $message }}</strong>
-            </span>
-            @enderror
-        </div>
-        <div class="col-md-2">
+
+        <div class="col-md-4">
             <label class="form-label" for="visible">Visible?</label>
             <select wire:model="visible" class="form-control @error('visible') is-invalid @enderror" name="visible" required>
                 <option value="1">Yes</option>
@@ -62,7 +50,7 @@
             </span>
             @enderror
         </div>
-        <div class="col-md-5">
+        <div class="col-md-4">
             <label class="form-label" for="meta_title">Meta Title</label>
             <input wire:model="meta_title" type="text" class="form-control @error('meta_title') is-invalid @enderror" name="meta_title" id="meta_title" placeholder="Meta Title" value="{{ old('meta_title') }}">
             @error('meta_title')
@@ -71,7 +59,7 @@
             </span>
             @enderror
         </div>
-        <div class="col-md-3">
+        <div class="col-md-4">
             <label class="form-label" for="category">Category</label>
             <select wire:model="category" class="form-control @error('category') is-invalid @enderror" name="category" id="category" required>
                 <option value="">-- Select Category --</option>
@@ -85,21 +73,7 @@
             </span>
             @enderror
         </div>
-        <div class="col-md-3">
-            <label class="form-label" for="subcategory">Sub Category</label>
-            <select wire:model="subcategory" class="form-control @error('category') is-invalid @enderror" name="subcategory" id="subcategory" required>
-                <option value="">-- Select Sub Category --</option>
-                @foreach($subcategories as $subcategory)
-                <option value="{{ $subcategory->id }}">{{ $subcategory->title }}</option>
-                @endforeach
-            </select>
-            @error('subcategory')
-            <span class="invalid-feedback" role="alert">
-                <strong>{{ $message }}</strong>
-            </span>
-            @enderror
-        </div>
-        <div class="col-md-3">
+        <div class="col-md-4">
             <label class="form-label" for="image">Image</label>
             <input type="file" class="form-control @error('image') is-invalid @enderror" name="image" required>
             <small class="text-muted">Recommended Size: 500px x 500px</small>

@@ -1,7 +1,7 @@
 @section('navbar')
     @livewire('layout.navbar', [
-        'title' => $service->title,
-        'parent' => 'Business Wing',
+        'title' => $serviceSubcategory->title,
+        'parent' => 'Business Wings Subcategories',
         'parentRoute' => 'services',
         'page' => 'show',
     ])
@@ -11,37 +11,37 @@
     <table class="table table-striped table-bordered align-middle">
         <tr>
             <th scope="col">Title</th>
-            <td>{{ $service->title }}</td>
+            <td>{{$serviceSubcategory ->title}}</td>
         </tr>
         <tr>
             <th scope="col">Category</th>
-            <td>{{ $service->category->title ?? 'Not Exists' }}</td>
+            <td>{{$serviceSubcategory->category->title ?? 'Not Exists'}}</td>
         </tr>
         <tr>
             <th scope="col">Visible</th>
-            <td>{{ $service->visible ? 'Yes' : 'No' }}</td>
+            <td>{{$serviceSubcategory->visible ? 'Yes' : 'No'}}</td>
         </tr>
         <tr>
             <th scope="col">Image</th>
             <td>
-                <img src="{{ asset('storage/' . $service->image_medium) }}" alt="">
+                <img src="{{asset('storage/' . $serviceSubcategory->image_medium)}}" alt="">
             </td>
         </tr>
         <tr>
             <th scope="col">Meta Title</th>
-            <td>{{ $service->meta_title }}</td>
+            <td>{{$serviceSubcategory->meta_title}}</td>
         </tr>
         <tr>
             <th scope="col">Meta Description</th>
-            <td>{{ $service->meta_description }}</td>
+            <td>{{$serviceSubcategory->meta_description}}</td>
         </tr>
         <tr>
             <th scope="col">Meta Keywords</th>
-            <td>{{ $service->meta_keywords }}</td>
+            <td>{{$serviceSubcategory->meta_keywords}}</td>
         </tr>
         <tr>
             <th scope="col">Article</th>
-            <td>{!! $service->article !!}</td>
+            <td>{!!$serviceSubcategory->article!!}</td>
         </tr>
     </table>
     <div class="">

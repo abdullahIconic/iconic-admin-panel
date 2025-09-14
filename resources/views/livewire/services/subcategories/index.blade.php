@@ -1,15 +1,15 @@
 @section('navbar')
-    @livewire('layout.navbar', [
-        'title' => 'List',
-        'parent' => 'Business Wings Categories',
-        'parentRoute' => 'services.categories',
-        'page' => 'index',
-    ])
+@livewire('layout.navbar', [
+'title' => 'List',
+'parent' => 'Business Wings Subcategories',
+'parentRoute' => 'services',
+'page' => 'index',
+])
 @endsection
 
 <div>
     <div class="mb-3">
-        Total {{ $totalCategories }} Categories
+        Total {{ $totalCategories }} Sub Categories
     </div>
     <div class="table-responsive-sm">
         <div class="d-flex gap-5 mb-3">
@@ -32,29 +32,29 @@
                     <th scope="col">Image</th>
                     <th scope="col">Title</th>
                     <th scope="col">Visible</th>
-                    <th scope="col">Wings</th>
+                    <th scope="col">Category</th>
                     <th scope="col">Action</th>
                 </tr>
             </thead>
             <tbody>
-                @foreach($categories as $category)
+                @foreach($categories as $service)
                 <tr>
                     <td>
-                        <img height="50" src="{{asset('storage/'.$category->image_small)}}" alt="">
+                        <img height="50" src="{{asset('storage/'.$service->image_small)}}" alt="">
                     </td>
-                    <td>{{$category->title}}</td>
-                    <td>{{$category->visible ? "Yes" : "No"}}</td>
-                    <td>{{$category->services->count()}}</td>
+                    <td>{{$service->title}}</td>
+                    <td>{{$service->visible ? "Yes" : "No"}}</td>
+                    <td>{{$service->category?->title}}</td>
                     <td>
-                        <a href="{{route('services.categories.show', $category->id)}}" class="btn bg-success text-white">View</a>
-                        <a href="{{route('services.categories.edit', $category->id)}}" class="btn bg-warning">Edit</a>
+                        <a href="{{route('services.subcategories.show', $service->id)}}" class="btn bg-success text-white">View</a>
+                        <a href="{{route('services.subcategories.edit', $service->id)}}" class="btn bg-warning">Edit</a>
                     </td>
                 </tr>
                 @endforeach
             </tbody>
         </table>
         @if( method_exists($categories,'links') )
-            {{ $categories->links() }}
+        {{ $categories->links() }}
         @endif
     </div>
 </div>

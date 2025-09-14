@@ -3,14 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Helper\Thumbnail;
-use App\Http\Requests\StoreServiceRequest;
-use App\Http\Requests\UpdateServiceRequest;
-use App\Models\Service;
+use Illuminate\Http\Request;
 use App\Models\ServiceCategory;
 use App\Models\ServiceSubcategory;
 use Illuminate\Support\Facades\Storage;
+use App\Http\Requests\StoreServiceSubcategoryRequest;
+use App\Http\Requests\UpdateServiceSubcategoryRequest;
 
-class ServiceController extends Controller
+class ServiceSubcategoryController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -19,8 +19,8 @@ class ServiceController extends Controller
      */
     public function index()
     {
-        $services = Service::all();
-        return view('panel.services.index', ['services' => $services]);
+        $subcategories = ServiceSubcategory::all();
+        return view('livewire.services.subcategories.index', ['subcategories' => $subcategories]);
     }
 
     /**
@@ -31,8 +31,7 @@ class ServiceController extends Controller
     public function create()
     {
         $categories = ServiceCategory::where('visible', 1)->get();
-        $subcategories = ServiceSubcategory::where('visible', 1)->get();
-        return view('panel.services.create', ['categories' => $categories, 'subcategories' => $subcategories]);
+        return view('livewire.services.subcategories.create', ['categories' => $categories]);
     }
 
     /**
@@ -41,7 +40,7 @@ class ServiceController extends Controller
     public function assetsChecker($entry, $request)
     {
         // Checking for sample
-        if($request->hasFile('image')){
+        if ($request->hasFile('image')) {
 
             // Deleting existing image
             Storage::delete($entry->image);
@@ -59,7 +58,7 @@ class ServiceController extends Controller
                     'height' => 135,
                 ]
             ];
-            $path = "services";
+            $path = "services/subcategories";
             $thumbnail = Thumbnail::make($request->image, $dimension, $path);
 
             // Updating Image Paths
@@ -76,26 +75,26 @@ class ServiceController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \App\Http\Requests\StoreServiceRequest  $request
+     * @param  \App\Http\Requests\StoreServiceSubcategoryRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreServiceRequest $request)
+    public function store(StoreServiceSubcategoryRequest $request)
     {
+
         $request->validate([
             'visible' => 'required',
             'category' => 'required',
             'title' => 'required',
-            'url' => 'required|unique:services',
+            'url' => 'required|unique:service_subcategories',
             'article' => 'required',
             'image' => 'required|image',
         ]);
 
-        $service = Service::create([
+        // dd($request->all());
+        $subcategory = ServiceSubcategory::create([
             'visible' => $request->visible,
-            'highlighted' => $request->highlighted,
             'position' => $request->position,
             'category_id' => $request->category,
-            'sub_category_id' => $request->subcategory,
             'slogan' => $request->slogan,
             'title' => $request->title,
             'url' => $request->url,
@@ -108,10 +107,9 @@ class ServiceController extends Controller
         ]);
 
         // Assets checker
-        $this->assetsChecker($service, $request);
+        $this->assetsChecker($subcategory, $request);
 
-        return redirect()->back()->with('success', 'Stored!');
-        // return redirect(route('services.index'))->with('success', 'Stored!');
+        return back()->with('success', 'Stored!');
     }
 
     /**
@@ -120,9 +118,9 @@ class ServiceController extends Controller
      * @param  \App\Models\Service  $service
      * @return \Illuminate\Http\Response
      */
-    public function show(Service $service)
+    public function show(ServiceSubcategory $serviceSubcategory)
     {
-        return view('panel.services.show', ['service' => $service]);
+        return view('livewire.services.subcategories.show', ['serviceSubcategory' => $serviceSubcategory]);
     }
 
     /**
@@ -131,21 +129,20 @@ class ServiceController extends Controller
      * @param  \App\Models\Service  $service
      * @return \Illuminate\Http\Response
      */
-    public function edit(Service $service)
+    public function edit(ServiceSubcategory $subcategory)
     {
         $categories = ServiceCategory::where('visible', 1)->get();
-        $subcategories = ServiceSubcategory::where('visible', 1)->get();
-        return view('panel.services.edit', ['service' => $service, 'categories' => $categories, 'subcategories' => $subcategories]);
+        return view('panel.services.subcategories.edit', ['serviceSubcategory' => $subcategory, 'categories' => $categories]);
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\Http\Requests\UpdateServiceRequest  $request
-     * @param  \App\Models\Service  $service
+     * @param  \App\Http\Requests\UpdateServiceSubcategoryRequest  $request
+     * @param  \App\Models\ServiceSubcategory  $serviceSubcategory
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateServiceRequest $request, Service $service)
+    public function update(UpdateServiceSubcategoryRequest $request, ServiceSubcategory $subcategory)
     {
         $request->validate([
             'visible' => 'required',
@@ -157,18 +154,16 @@ class ServiceController extends Controller
         ]);
 
         // Checking Url Existance
-        if ($service->url != $request->url) {
+        if ($subcategory->url != $request->url) {
             $request->validate([
-                'url' => 'unique:services',
+                'url' => 'unique:service_subcategories',
             ]);
         }
 
-        $service->update([
+        $subcategory->update([
             'visible' => $request->visible,
-            'highlighted' => $request->highlighted,
             'position' => $request->position,
             'category_id' => $request->category,
-            'sub_category_id' => $request->subcategory,
             'slogan' => $request->slogan,
             'title' => $request->title,
             'url' => $request->url,
@@ -181,24 +176,25 @@ class ServiceController extends Controller
         ]);
 
         // Assets checker
-        $this->assetsChecker($service, $request);
+        $this->assetsChecker($subcategory, $request);
+        // dd($subcategories, $request);
 
-        return redirect(route('services.index'))->with('status', 'Updated!');
+        return redirect(route('services.subcategories.index'))->with('status', 'Updated!');
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Service  $service
+     * @param  \App\Models\ServiceSubcategory  $serviceSubcategory
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Service $service)
+    public function destroy(ServiceSubcategory $subcategory)
     {
-        Storage::delete($service->image);
-        Storage::delete($service->image_medium);
-        Storage::delete($service->image_small);
+        Storage::delete($subcategory->image);
+        Storage::delete($subcategory->image_medium);
+        Storage::delete($subcategory->image_small);
 
-        $service->delete();
+        $subcategory->delete();
 
         return back()->with('status', 'Deleted!');
     }
