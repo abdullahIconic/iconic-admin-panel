@@ -12,10 +12,10 @@ class GrowthPathResource extends JsonResource
      * @param  \Illuminate\Http\Request  $request
      * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
      */
-    public function toArray($request)
+    public function toArray($growthpath)
     {
          return [
-            "title" => $this->name,
+            "title" => $this->title,
             "year" => $this->year,
             "description" => $this->description,
             "image" => env('APP_ENV') == 'local' ? asset('storage/' . $this->image) : secure_asset('storage/' . $this->image),

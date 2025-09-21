@@ -33,7 +33,7 @@ Route::middleware('auth')
             ->name('services.')
             ->group(function () {
                 Route::resource('categories', ServiceCategoryController::class)->only(['store', 'update']);
-                Route::resource('subcategories', ServiceSubCategoryController::class)->only(['store', 'update']);
+                Route::resource('subcategories', ServiceSubcategoryController::class)->only(['store', 'update']);
                 Route::resource('best-feature-images', BestFeatureImageController::class)->only(['store', 'update']);
                 Route::resource('what-we-delivered', ServiceWwdController::class)->only(['store', 'update']);
                 Route::resource('safety', ServiceSafetyController::class)->only(['store', 'update']);

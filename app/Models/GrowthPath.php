@@ -9,5 +9,10 @@ class GrowthPath extends Model
 {
     use HasFactory;
 
-     protected $guarded = [];
+    protected $guarded = [];
+
+    function author()
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
 }

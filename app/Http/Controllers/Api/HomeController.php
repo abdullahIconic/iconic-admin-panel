@@ -37,7 +37,7 @@ class HomeController extends Controller
 {
     public function data()
     {
-        Log::info('Home page data requested');
+        // Log::info('Home page data requested');
         try {
             // Section Data
             $sectionData = SectionData::where('page', 'home')->get();
@@ -146,8 +146,8 @@ class HomeController extends Controller
             $clients = $clients->map(fn($client) => new ClientResource($client));
 
             // growth path
-            $growthpaths = GrowthPath::where('visible', true)->get();
-            $growthpaths = $clients->map(fn($growthpaths) => new GrowthPathResource($growthpaths));
+            $growth_paths = GrowthPath::where('visible', true)->get();
+            $growth_paths = $growth_paths->map(fn($growth_paths) => new GrowthPathResource($growth_paths));
 
             // // Testimonials
             // $testimonials = HappyClient::where('visible', true)->inRandomOrder()->get()->take(4);
@@ -176,9 +176,9 @@ class HomeController extends Controller
                     // "serviceList" => $serviceList,
                     // "brands" => $brands,
                     "clients" => $clients,
-                    "growthpaths" => $growthpaths,
                     // "services" => $services,
                     "activities" => $activities,
+                    "growth_paths" => $growth_paths,
                     // "testimonials" => $testimonials,
                     "supports" => $supports,
                     "service_categories" => $service_categories,

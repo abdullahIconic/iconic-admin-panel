@@ -17,6 +17,7 @@ class ServiceResource extends JsonResource
             "title" => $this->title,
             "url" => $this->url,
             "description" => $this->description,
+            "article" => $this->article,
             "category" => ['url' => $this->category->url],
             "image" => env('APP_ENV') == 'local' ? asset('storage/'.$this->image_medium) : secure_asset('storage/'.$this->image_medium),
         ];

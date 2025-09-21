@@ -327,7 +327,7 @@ class ServiceController extends Controller
                         "title" => $service->title,
                         "url" => $service->url,
                         "meta_description" => $service->meta_description,
-                        "image" => env('APP_ENV') == 'local' ? asset('storage/' . $service->image_medium) : secure_asset('storage/' . $service->image_medium)
+                        "image" => env('APP_ENV') == 'local' ? asset('storage/' . $service->image) : secure_asset('storage/' . $service->image)
                     ];
                 });
 
@@ -336,7 +336,8 @@ class ServiceController extends Controller
                     "title" => $subcat->title,
                     "url" => $subcat->url,
                     "description" => $subcat->description,
-                    "image" => env('APP_ENV') == 'local' ? asset('storage/' . $subcat->image_medium) : secure_asset('storage/' . $subcat->image_medium),
+                    "article" => $subcat->article,
+                    "image" => env('APP_ENV') == 'local' ? asset('storage/' . $subcat->image) : secure_asset('storage/' . $subcat->image),
                     "services" => $services
                 ];
             });
@@ -399,7 +400,7 @@ class ServiceController extends Controller
                     "sliders" => $sliders,
                     "counters" => $counters,
                     "category" => $categoryModel,
-                    "subcategories" => $subcategories, // ✅ নতুন সাবক্যাটাগরি সহ সার্ভিস পাঠানো হচ্ছে
+                    "subcategories" => $subcategories,
                     "experts" => $experts ?? [],
                     "testimonials" => $testimonials ?? [],
                 ]
@@ -473,9 +474,10 @@ class ServiceController extends Controller
                 return [
                     "id" => $service->id,
                     "title" => $service->title,
-                    "short_description" => $service->short_description,
+                    "article" => $service->article,
+                    "subcategory" => $service->subcategory,
                     "url" => $service->url,
-                    "image" => $service->image_medium ? (env('APP_ENV') == 'local' ? asset('storage/' . $service->image_medium) : secure_asset('storage/' . $service->image_medium)) : null,
+                    "image" => $service->image ? (env('APP_ENV') == 'local' ? asset('storage/' . $service->image) : secure_asset('storage/' . $service->image)) : null,
                 ];
             });
 

@@ -18,6 +18,7 @@ class ServiceCategoryResource extends JsonResource
             "title" => $this->title,
             "url" => $this->url,
             "description" => $this->description,
+            "article" => $this->article,
             "image" => env('APP_ENV') == 'local'
                 ? asset('storage/' . $this->image)
                 : secure_asset('storage/' . $this->image),
