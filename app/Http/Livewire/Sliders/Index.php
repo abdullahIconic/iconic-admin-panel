@@ -12,7 +12,7 @@ class Index extends Component
     use WithPagination;
     protected $paginationTheme = 'bootstrap';
 
-    public $qty = 12;
+    public $qty = 30;
     public $keyword = '';
     public $totalPosts;
 

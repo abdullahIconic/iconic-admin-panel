@@ -571,7 +571,7 @@ class ServiceController extends Controller
                 return [
                     "title" => $industry->title,
                     "url" => $industry->url,
-                    "image" => env('APP_ENV') == 'local' ? asset('storage/' . $industry->image_small) : secure_asset('storage/' . $industry->image_small),
+                    "image" => env('APP_ENV') == 'local' ? asset('storage/' . $industry->image) : secure_asset('storage/' . $industry->image),
                     "description" => $industry->description,
                 ];
             });
