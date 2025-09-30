@@ -13,6 +13,7 @@ class Edit extends Component
         $visible,
         $page_name,
         $slogan,
+        $position,
         $slogan_color,
         $title,
         $title_color,
@@ -31,6 +32,7 @@ class Edit extends Component
         $this->visible = $slider->visible;
         $this->page_name = $slider->page_name;
         $this->slogan = $slider->slogan;
+        $this->position = $slider->position;
         $this->slogan_color = $slider->slogan_color;
         $this->title = $slider->title;
         $this->title_color = $slider->title_color;

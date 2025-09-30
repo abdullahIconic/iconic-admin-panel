@@ -32,6 +32,7 @@
                     <th scope="col">Image</th>
                     <th scope="col">Title</th>
                     <th scope="col">Visible</th>
+                    <th scope="col">Position</th>
                     <th scope="col">Page Identifier</th>
                     <th scope="col">Action</th>
                 </tr>
@@ -44,6 +45,7 @@
                     </td>
                     <td>{{$slider->title}}</td>
                     <td>{{$slider->visible ? "Yes" : "No"}}</td>
+                    <td>{{$slider->position}}</td>
                     <td>{{$slider->page_name}}</td>
                     <td>
                         <a href="{{route('sliders.show', $slider->id)}}" class="btn bg-success text-white">View</a>

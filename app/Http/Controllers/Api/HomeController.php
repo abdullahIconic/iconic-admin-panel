@@ -120,7 +120,7 @@ class HomeController extends Controller
             $activities = Activity::where('visible', true)
                 ->latest()
                 ->get()
-                ->take(4);
+                ->take(12);
             $activities = $activities->map(fn($post) => new ActivityResource($post));
 
             // wings category

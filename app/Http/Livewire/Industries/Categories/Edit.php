@@ -11,6 +11,7 @@ class Edit extends Component
     public
         $category,
         $slogan,
+        $visible,
         $title,
         $url,
         $description,
@@ -36,7 +37,7 @@ class Edit extends Component
         $this->project_overview = $category->project_overview;
         $this->meta_title = $category->meta_title;
         $this->meta_description = $category->meta_description;
-        $this->meta_keyword = $category->meta_keywordss;
+        $this->meta_keywords = $category->meta_keywords;
     }
 
     public function updatedTitle()

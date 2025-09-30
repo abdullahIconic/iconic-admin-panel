@@ -69,29 +69,29 @@ class IndustriesController extends Controller
                 ];
             });
 
-                        // industry Categories
+            // industry Categories
             $industry_categories = ServiceCategory::where('visible', true)
-            ->where('type', 'industry')
-            ->get();
+                ->where('type', 'industry')
+                ->get();
 
             $industry_categories = $industry_categories->map(function ($category) {
-            $services = Industry::where('category_id', $category->id)->get();
+                $services = Industry::where('category_id', $category->id)->get();
 
-            return [
-             "title" => $category->title,
-             "url" => $category->url,
-             "description" => $category->description,
-             "overview" => $category->overview,
-             "image" => secure_asset('storage/' . $category->image_small),
-             "services" => $services->map(function ($service) {
-              return [
-            "title" => $service->title,
-            "url" => $service->url,
-                  ];
-    }),
-];
+                return [
+                    "title" => $category->title,
+                    "url" => $category->url,
+                    "description" => $category->description,
+                    "overview" => $category->overview,
+                    "image" => secure_asset('storage/' . $category->image),
+                    "services" => $services->map(function ($service) {
+                        return [
+                            "title" => $service->title,
+                            "url" => $service->url,
+                        ];
+                    }),
+                ];
             });
- 
+
             $response = [
                 "status" => 1,
                 "message" => "success",
@@ -294,7 +294,7 @@ class IndustriesController extends Controller
                 ->where('visible', true)
                 ->firstOrFail();
 
-            $categories = BlogCategory::where('visible', true)->where('language','en')->get();
+            $categories = BlogCategory::where('visible', true)->where('language', 'en')->get();
             $categories = $categories->map(function ($item) {
                 return [
                     "title" => $item->title,

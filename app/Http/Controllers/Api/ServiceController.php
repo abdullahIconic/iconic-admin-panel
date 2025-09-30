@@ -27,7 +27,7 @@ class ServiceController extends Controller
     {
         try {
             // Section Data
-            $sectionData = SectionData::where('page', 'services')->get();
+            $sectionData = SectionData::where('page', 'wings')->get();
             $sectionData = $sectionData->map(function ($data) {
                 return [
                     "page" => $data->page,
@@ -43,7 +43,7 @@ class ServiceController extends Controller
             });
 
             // Slider
-            $sliders = Slider::where('page_name', 'services')
+            $sliders = Slider::where('page_name', 'wings')
                 ->where('visible', 1)
                 ->orderBy('position', 'asc')
                 ->get();
@@ -87,7 +87,7 @@ class ServiceController extends Controller
             $safeties = ServiceSafety::where('visible', 1)->get();
 
             // Metadata
-            $meta = Metadata::where('page_name', 'services')->first();
+            $meta = Metadata::where('page_name', 'wings')->first();
 
             $response = [
                 "status" => 1,
@@ -729,6 +729,7 @@ class ServiceController extends Controller
                         "title" => $related->title,
                         "url" => $related->url,
                         "category_url" => $related->category->url,
+                        'image' => env('APP_ENV') == 'local' ? asset('storage/' . $related->image) : secure_asset('storage/' . $related->image),
                     ];
                 });
 

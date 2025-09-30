@@ -7,7 +7,7 @@ var editor_config = {
 
 		/* width and height of the editor */
 		width: "100%",
-		height: 200,
+		height: 400,
 
 		/* display statusbar */
 		statubar: true,

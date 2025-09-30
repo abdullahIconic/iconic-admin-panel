@@ -12,6 +12,7 @@ class Create extends Component
         $visible = 1,
         $page_name = 'home',
         $slogan,
+        $position,
         $slogan_color,
         $title,
         $title_color,

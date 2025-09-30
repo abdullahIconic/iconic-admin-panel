@@ -11,7 +11,7 @@
     @csrf
 
     <div class="row g-3">
-        <div class="col-md-1">
+        <div class="col-md-4">
             <label class="form-label" for="visible">Visible</label>
             <select wire:model="visible" class="form-control @error('visible') is-invalid @enderror" name="visible" required>
                 <option value="1">Yes</option>
@@ -23,7 +23,16 @@
             </span>
             @enderror
         </div>
-        <div class="col-md-3">
+        <div class="col-md-4">
+            <label class="form-label" for="position">Position</label>
+            <input wire:model="position" type="text" class="form-control @error('position') is-invalid @enderror" name="position" required>
+            @error('position')
+            <span class="invalid-feedback" role="alert">
+                <strong>{{ $message }}</strong>
+            </span>
+            @enderror
+        </div>
+        <div class="col-md-4">
             <label class="form-label" for="page_name">Page</label>
             <input wire:model="page_name" type="text" class="form-control @error('page_name') is-invalid @enderror" name="page_name" required>
             @error('page_name')

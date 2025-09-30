@@ -82,6 +82,7 @@ class SliderController extends Controller
         $slider = Slider::create([
             'visible' => $request->visible,
             'page_name' => $request->page_name,
+            'position' => $request->position,
             'slogan' => $request->slogan,
             'slogan_color' => $request->slogan_color,
             'title' => $request->title,
@@ -137,6 +138,7 @@ class SliderController extends Controller
             'visible' => $request->visible,
             'page_name' => $request->page_name,
             'slogan' => $request->slogan,
+            'position' => $request->position,
             'slogan_color' => $request->slogan_color,
             'title' => $request->title,
             'title_color' => $request->title_color,
