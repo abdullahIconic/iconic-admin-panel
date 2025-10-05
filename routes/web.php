@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Auth\LoginController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 // use Artisan;
@@ -126,6 +127,8 @@ Route::middleware('auth')
         Route::resource('sliders', SliderController::class)->only(['store', 'update']);
         Route::resource('team', TeamController::class)->only(['store', 'update']);
         Route::resource('section-data', SectionDataController::class)->only(['store', 'update']);
+
+        Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
     });
 
 
