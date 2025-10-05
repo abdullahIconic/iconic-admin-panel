@@ -68,10 +68,10 @@ class ProductController extends Controller
                         $segment_categories = ServiceCategory::where('visible', true)
                         ->where('type', 'segment')
                         ->get();
-            
+
                         $segment_categories = $segment_categories->map(function ($category) {
                         $services = ProductSegment::where('category_id', $category->id)->get();
-            
+
                         return [
                          "title" => $category->title,
                          "url" => $category->url,
@@ -427,7 +427,7 @@ class ProductController extends Controller
     public function productDetails($slug)
     {
         try {
-            
+
             // get 1 product segment by slug = url
 
             $segment = ProductSegment::where('url', $slug)
@@ -702,6 +702,7 @@ class ProductController extends Controller
                     "url" => $product->url,
                     "price" => $product->price,
                     "regular_price" => $product->regular_price,
+                    "overview" => $product->overview,
                 ];
             });
 
@@ -720,6 +721,7 @@ class ProductController extends Controller
                     "url" => $product->url,
                     "price" => $product->price,
                     "regular_price" => $product->regular_price,
+                    "overview" => $product->overview,
                 ];
             });
 
@@ -767,6 +769,7 @@ class ProductController extends Controller
                 "title" => $product->title,
                 "url" => $product->url,
                 "views" => $product->views,
+                "overview" => $product->overview,
                 "image" => env('APP_ENV') == 'local' ? asset('storage/' . $product->image) : secure_asset('storage/' . $product->image)
             ];
         });
@@ -815,6 +818,7 @@ class ProductController extends Controller
                 "url" => $product->url,
                 "price" => $product->price,
                 "regular_price" => $product->regular_price,
+                "overview" => $product->overview,
             ];
         });
 
@@ -847,6 +851,7 @@ class ProductController extends Controller
                 "url" => $product->url,
                 "price" => $product->price,
                 "regular_price" => $product->regular_price,
+                "overview" => $product->overview,
             ];
         });
 
@@ -870,6 +875,8 @@ class ProductController extends Controller
                 return [
                     "title" => $product->title,
                     "url" => $product->url,
+                    "overview" => $product->overview,
+                    "views" => $product->views,
                     "image" => env('APP_ENV') == 'local' ? asset('storage/' . $product->image) : secure_asset('storage/' . $product->image)
                 ];
             });
@@ -892,6 +899,7 @@ class ProductController extends Controller
                     "url" => $product->url,
                     "price" => $product->price,
                     "regular_price" => $product->regular_price,
+                    "overview" => $product->overview,
                 ];
             });
 
@@ -941,7 +949,7 @@ class ProductController extends Controller
                     ];
                 }),
             ];
-            
+
             //get all reviews for this product
             $reviews=Review::where('product_id',$product['id'])->get();
 
@@ -992,7 +1000,7 @@ class ProductController extends Controller
     {
         try {
 
-            //meta 
+            //meta
             $meta = Metadata::where('page_name', "products")->first();
             // Brand
             $brand = Brand::where('url', $brand)->first();
@@ -1049,6 +1057,7 @@ class ProductController extends Controller
                     "short_description" => $product->short_description,
                     "price" => $product->price,
                     "regular_price" => $product->regular_price,
+                    "overview" => $product->overview,
                     "url" => $product->url,
                     "image" => env('APP_ENV') == 'local' ? asset('storage/' . $product->image) : secure_asset('storage/' . $product->image)
                 ];
@@ -1084,12 +1093,12 @@ class ProductController extends Controller
     }
 
 
-    //productsCategory include all category products , category info, every brand list, meta , faqs, sliders, 
+    //productsCategory include all category products , category info, every brand list, meta , faqs, sliders,
 
     public function productsCategory($category)
     {
         try {
-            //meta 
+            //meta
             $meta = Metadata::where('page_name', "products")->first();
             // Category
             $category = ProductCategory::where('url', $category)->first();
@@ -1140,6 +1149,7 @@ class ProductController extends Controller
                     "price" => $product->price,
                     "regular_price" => $product->regular_price,
                     "brand" => $product->brand->url,
+                    "overview" => $product->overview,
                 ];
             });
 
@@ -1173,14 +1183,14 @@ class ProductController extends Controller
 
 
 
-    
 
-    
+
+
 
     public function productsBrandCategory($brand, $category)
     {
         try {
-            //meta 
+            //meta
              $meta = Metadata::where('page_name', "products")->first();
             // Brand
             $brand = Brand::where('url', $brand)->first();
@@ -1216,6 +1226,7 @@ class ProductController extends Controller
                     "url" => $product->url,
                     "price" => $product->price,
                     "regular_price" => $product->regular_price,
+                    "overview" => $product->overview,
                 ];
             });
 
@@ -1280,6 +1291,7 @@ class ProductController extends Controller
                     "url" => $product->url,
                     "price" => $product->price,
                     "regular_price" => $product->regular_price,
+                    "overview" => $product->overview,
                 ];
             });
 
@@ -1298,7 +1310,7 @@ class ProductController extends Controller
         }
     }
 
-    // post a review with name email phone rating comment 
+    // post a review with name email phone rating comment
 
     public function review(Request $request)
     {
