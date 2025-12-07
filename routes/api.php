@@ -1,19 +1,21 @@
 <?php
 
-use App\Http\Controllers\Api\AboutController;
-use App\Http\Controllers\Api\ActivityController;
+use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\BlogController;
+use App\Http\Controllers\Api\HomeController;
+use App\Http\Controllers\Api\TeamController;
+use App\Http\Controllers\Api\AboutController;
+use App\Http\Controllers\Api\OfferController;
 use App\Http\Controllers\Api\CareerController;
 use App\Http\Controllers\Api\ContactController;
-use App\Http\Controllers\Api\HomeController;
-use App\Http\Controllers\Api\IndustriesController;
-use App\Http\Controllers\Api\OfferController;
 use App\Http\Controllers\Api\ProductController;
-use App\Http\Controllers\Api\ResourceController;
 use App\Http\Controllers\Api\ServiceController;
+use App\Http\Controllers\Api\ActivityController;
+use App\Http\Controllers\Api\ResourceController;
 use App\Http\Controllers\Api\SolutionController;
-use App\Http\Controllers\Api\TeamController;
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\ApplicationControlle;
+use App\Http\Controllers\Api\IndustriesController;
+use App\Http\Controllers\Api\ApplicationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -144,4 +146,9 @@ Route::controller(ContactController::class)
         Route::get('contact-page-data', 'data');
         Route::post('contact/send', 'send');
         Route::post('subscribe', 'subscribe');
+    });
+
+Route::controller(ApplicationController::class)
+    ->group(function () {
+        Route::post('application/send', 'store');
     });

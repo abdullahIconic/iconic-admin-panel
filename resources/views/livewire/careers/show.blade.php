@@ -18,6 +18,10 @@
             <td>{{$career->visible ? 'Yes' : 'No'}}</td>
         </tr>
         <tr>
+            <th scope="col">Is Running</th>
+            <td>{{$career->is_running ? 'Yes' : 'No'}}</td>
+        </tr>
+        <tr>
             <th scope="col">Decription</th>
             <td>{{$career->description}}</td>
         </tr>

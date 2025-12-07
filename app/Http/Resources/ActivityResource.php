@@ -20,7 +20,7 @@ class ActivityResource extends JsonResource
             "title" => $this->title,
             "url" => $this->url,
             "meta_description" => mb_substr($this->meta_description, 0, 100),
-            "image" => env('APP_ENV') == 'local' ? asset('storage/' . $this->image_medium) : secure_asset('storage/' . $this->image_medium),
+            "image" => env('APP_ENV') == 'local' ? asset('storage/' . $this->image) : secure_asset('storage/' . $this->image),
         ];
     }
 }

@@ -42,6 +42,18 @@
             </span>
             @enderror
         </div>
+        <div class="col-md-2">
+            <label class="form-label" for="is_running">Is Running</label>
+            <select wire:model="is_running" class="form-control @error('is_running') is-invalid @enderror" name="is_running" required>
+                <option value="1">Yes</option>
+                <option value="0">No</option>
+            </select>
+            @error('is_running')
+            <span class="invalid-feedback" role="alert">
+                <strong>{{ $message }}</strong>
+            </span>
+            @enderror
+        </div>
         <div class="col-md-5">
             <label class="form-label" for="meta_title">Meta Title</label>
             <input wire:model="meta_title" type="text" class="form-control @error('meta_title') is-invalid @enderror" name="meta_title" id="meta_title" placeholder="Meta Title" value="{{ old('meta_title') }}">

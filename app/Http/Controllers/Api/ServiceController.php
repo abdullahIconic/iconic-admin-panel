@@ -787,6 +787,7 @@ class ServiceController extends Controller
                     "title" => $service->title,
                     "url" => $service->url,
                     "category_url" => $service->category->url,
+                    'image' => env('APP_ENV') == 'local' ? asset('storage/' . $service->image) : secure_asset('storage/' . $service->image),
                 ];
             });
 

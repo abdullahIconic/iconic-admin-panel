@@ -54,12 +54,13 @@ class CareerController extends Controller
             // Metadata
             $meta = Metadata::where('page_name', 'careers')->first();
 
-            // Service Categories
-            $careers = Career::where('visible', 1)->get();
+                  // Career
+            $careers = Career::where('visible', 1)->orderByDesc('is_running')->get();
             $careers = $careers->map(function ($career) {
                 return [
                     "title" => $career->title,
                     "url" => $career->url,
+                    "is_running" => $career->is_running,
                     "description" => $career->description,
                     "image" => $career->image ? (env('APP_ENV') == 'local' ? asset('storage/' . $career->image) : secure_asset('storage/' . $career->image)) : null,
                     "button_text"=>$career->button_text,

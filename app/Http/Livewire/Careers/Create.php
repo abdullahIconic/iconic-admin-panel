@@ -10,6 +10,7 @@ class Create extends Component
 {
     public
         $visible = 1,
+        $is_running = 0,
         $title,
         $url,
         $description,

@@ -31,6 +31,7 @@
                 <tr>
                     <th scope="col">Title</th>
                     <th scope="col">Visible</th>
+                    <th scope="col">Is Running</th>
                     <th scope="col">Action</th>
                 </tr>
             </thead>
@@ -39,6 +40,7 @@
                 <tr>
                     <td>{{$career->title}}</td>
                     <td>{{$career->visible ? "Yes" : "No"}}</td>
+                    <td>{{$career->is_running ? "Yes" : "No"}}</td>
                     <td>
                         <a href="{{route('careers.show', $career->id)}}" class="btn bg-success text-white">View</a>
                         <a href="{{route('careers.edit', $career->id)}}" class="btn bg-warning">Edit</a>

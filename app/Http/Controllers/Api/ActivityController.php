@@ -38,14 +38,14 @@ class ActivityController extends Controller
                         ->where('isFeatured', true)
                         ->get();
             $featured = $featured->map(fn($post) => new ActivityResource($post));
-            
+
             // Recent Posts
             $recent = Activity::where('visible', true)
                         ->latest()
                         ->get()
                         ->take(4);
             $recent = $recent->map(fn($post) => new ActivityResource($post));
-            
+
             // Popular Posts
             $popular = Activity::where('visible', true)
                         ->orderBy('views', 'desc')
@@ -81,11 +81,11 @@ class ActivityController extends Controller
             return response($exception->getMessage(), 500);
         }
     }
-    
+
     public function postsByCategory($category)
     {
         try{
-            
+
             $category = ActivityCategory::where('url', $category)->where('visible', true)->firstOrFail();
             $posts = $category->activities()->where('visible', true)->get();
             $posts = $posts->map(function($post){
@@ -127,7 +127,7 @@ class ActivityController extends Controller
             $activity = Activity::where('url', $url)
                         ->where('visible', true)
                         ->firstOrFail();
-                
+
             $activity->increment('views');
             $activity->save();
 
@@ -147,6 +147,7 @@ class ActivityController extends Controller
                     "title" => $post->title,
                     "url" => $post->url,
                     "author" => $post->author->name,
+                    "image" => $post->image_medium ? (env('APP_ENV') == 'local' ? asset('storage/'.$post->image_medium) : secure_asset('storage/'.$post->image)) : asset('/images/dummy-profile-pic-male.jpg')
                 ];
             });
 

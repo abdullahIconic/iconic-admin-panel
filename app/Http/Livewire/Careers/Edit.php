@@ -11,6 +11,7 @@ class Edit extends Component
 {
     public
         $visible,
+        $is_running,
         $title,
         $url,
         $description,
@@ -27,6 +28,7 @@ class Edit extends Component
     {
         // Career Data
         $this->visible = $career->visible;
+        $this->is_running = $career->is_running;
         $this->title = $career->title;
         $this->url = $career->url;
         $this->description = $career->description;

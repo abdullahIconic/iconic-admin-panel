@@ -81,6 +81,7 @@ class CareerController extends Controller
     {
         $career = Career::create([
             'visible' => $request->visible,
+            'is_running' => $request->is_running,
             'title' => $request->title,
             'url' => $request->url,
             'description' => $request->description,
@@ -122,6 +123,7 @@ class CareerController extends Controller
     {
         $career->update([
             'visible' => $request->visible,
+            'is_running' => $request->is_running,
             'title' => $request->title,
             'url' => $request->url,
             'description' => $request->description,
