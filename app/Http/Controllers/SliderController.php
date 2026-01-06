@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Slider;
 use App\Helper\Thumbnail;
+use Intervention\Image\Facades\Image;
+use Illuminate\Support\Facades\Storage;
 use App\Http\Requests\StoreSliderRequest;
 use App\Http\Requests\UpdateSliderRequest;
-use App\Models\Slider;
-use Illuminate\Support\Facades\Storage;
 
 class SliderController extends Controller
 {
@@ -36,40 +37,113 @@ class SliderController extends Controller
     /**
      * Checking for assets
      */
-    public function assetsChecker($entry, $request)
-    {
-        // Checking for sample
-        if($request->hasFile('image')){
+    // public function assetsChecker($entry, $request)
+    // {
+    //     // Checking for sample
+    //     if($request->hasFile('image')){
 
-            // Deleting existing image
-            Storage::delete($entry->image);
-            Storage::delete($entry->image_medium);
-            Storage::delete($entry->image_small);
+    //         // Deleting existing image
+    //         Storage::delete($entry->image);
+    //         Storage::delete($entry->image_medium);
+    //         Storage::delete($entry->image_small);
 
-            // Thumbnail Maker
-            $dimension = [
-                'medium' => [
-                    'width' => 320,
-                    'height' => 180,
-                ],
-                'small' => [
-                    'width' => 240,
-                    'height' => 135,
-                ]
-            ];
-            $path = "sliders";
-            $thumbnail = Thumbnail::make($request->image, $dimension, $path);
+    //         // Thumbnail Maker
+    //         $dimension = [
+    //             'medium' => [
+    //                 'width' => 320,
+    //                 'height' => 180,
+    //             ],
+    //             'small' => [
+    //                 'width' => 240,
+    //                 'height' => 135,
+    //             ]
+    //         ];
+    //         $path = "sliders";
+    //         $thumbnail = Thumbnail::make($request->image, $dimension, $path);
 
-            // Updating Image Paths
-            $entry->update([
-                "image" => $thumbnail['image'],
-                "image_medium" => $thumbnail['image_medium'],
-                "image_small" => $thumbnail['image_small'],
-                "updated_by" => auth()->id(),
-                "updated_at" => now(),
-            ]);
-        }
+    //         // Updating Image Paths
+    //         $entry->update([
+    //             "image" => $thumbnail['image'],
+    //             "image_medium" => $thumbnail['image_medium'],
+    //             "image_small" => $thumbnail['image_small'],
+    //             "updated_by" => auth()->id(),
+    //             "updated_at" => now(),
+    //         ]);
+    //     }
+    // }
+
+
+
+public function assetsChecker($entry, $request)
+{
+    if ($request->hasFile('image')) {
+
+        // delete old images
+        Storage::delete([
+            $entry->image,
+            $entry->image_medium,
+            $entry->image_small
+        ]);
+
+        $image      = $request->file('image');
+        $path       = "sliders";
+        $extension  = "jpg"; // best performance
+        $filename   = time() . '.' . $extension;
+
+        // ***************
+        // MAIN IMAGE (1920 width)
+        // ***************
+        $main = Image::make($image->getRealPath())
+                    ->resize(1920, null, function($c){
+                        $c->aspectRatio();
+                        $c->upsize();
+                    })
+                    ->encode($extension, 75);
+
+        Storage::put("$path/$filename", $main);
+
+        // ***************
+        // MEDIUM IMAGE (1280 width)
+        // ***************
+        $mediumName = time() . '_medium.' . $extension;
+
+        $medium = Image::make($image->getRealPath())
+                    ->resize(1280, null, function($c){
+                        $c->aspectRatio();
+                        $c->upsize();
+                    })
+                    ->encode($extension, 75);
+
+        Storage::put("$path/$mediumName", $medium);
+
+
+        // ***************
+        // SMALL IMAGE (640 width)
+        // ***************
+        $smallName = time() . '_small.' . $extension;
+
+        $small = Image::make($image->getRealPath())
+                    ->resize(640, null, function($c){
+                        $c->aspectRatio();
+                        $c->upsize();
+                    })
+                    ->encode($extension, 75);
+
+        Storage::put("$path/$smallName", $small);
+
+        // ***************
+        // UPDATE DATABASE
+        // ***************
+        $entry->update([
+            "image"         => "$path/$filename",
+            "image_medium"  => "$path/$mediumName",
+            "image_small"   => "$path/$smallName",
+            "updated_by"    => auth()->id(),
+            "updated_at"    => now(),
+        ]);
     }
+}
+
 
     /**
      * Store a newly created resource in storage.

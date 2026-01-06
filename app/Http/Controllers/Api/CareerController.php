@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\GalleryResource;
 use App\Models\Career;
+use App\Models\Gallery;
 use App\Models\Metadata;
 use App\Models\SectionData;
 use App\Models\Slider;
@@ -54,6 +56,11 @@ class CareerController extends Controller
             // Metadata
             $meta = Metadata::where('page_name', 'careers')->first();
 
+               // gallery data
+            $galleryData = Gallery::where('visible', true)->latest()->get();
+            $galleryData = $galleryData->map(fn($galleryData) => new GalleryResource($galleryData));
+
+
                   // Career
             $careers = Career::where('visible', 1)->orderByDesc('is_running')->get();
             $careers = $careers->map(function ($career) {
@@ -76,6 +83,7 @@ class CareerController extends Controller
                     "meta" => $meta,
                     "sectionData" => $sectionData,
                     "sliders" => $sliders,
+                    "galleryData" => $galleryData,
                     "careers" => $careers
                 ]
             ];

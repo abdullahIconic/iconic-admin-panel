@@ -12,7 +12,6 @@ class ApplicationController extends Controller
 {
     public function store(Request $request)
     {
-        // Validation
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email',
@@ -21,12 +20,11 @@ class ApplicationController extends Controller
             'job_title' => 'required|string'
         ]);
 
-        // Save CV with predictable name
         $file = $request->file('resume');
-        $cvFileName = time() . '_' . $file->getClientOriginalName();
+        $cleanName = preg_replace('/[^A-Za-z0-9\.\-_]/', '-', $file->getClientOriginalName());
+        $cvFileName = time() . '_' . $cleanName;
         $cvPath = $file->storeAs('resumes', $cvFileName);
 
-        // Save in DB
         $application = Application::create([
             'name' => $request->name,
             'email' => $request->email,
@@ -34,9 +32,7 @@ class ApplicationController extends Controller
             'resume' => $cvPath,
             'job_title' => $request->job_title
         ]);
-
-        // Send Email
-        Mail::to('info@iconic.com.bd')
+        Mail::to('abdullahfardeen.iconic@gmail.com')
             ->send(new CareerApplicationMail($application));
 
         return response()->json(['message' => 'Application submitted successfully']);

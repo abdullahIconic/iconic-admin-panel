@@ -19,6 +19,7 @@ class ServiceCategoryController extends Controller
     public function index()
     {
         $categories = ServiceCategory::all();
+
         return view('panel.blog.category.index', ['categories' => $categories]);
     }
 
@@ -35,60 +36,127 @@ class ServiceCategoryController extends Controller
     /**
      * Checking for assets
      */
+    // public function assetsChecker($entry, $request)
+    // {
+    //     // Checking for sample
+    //     if ($request->hasFile('image')) {
+    //         // Deleting existing image
+    //         Storage::delete($entry->image);
+    //         Storage::delete($entry->image_medium);
+    //         Storage::delete($entry->image_small);
+    //         // Thumbnail Maker
+    //         $dimension = [
+    //             'medium' => [
+    //                 'width' => 320,
+    //                 'height' => 180,
+    //             ],
+    //             'small' => [
+    //                 'width' => 240,
+    //                 'height' => 135,
+    //             ]
+    //         ];
+    //         $path = "services/categories";
+    //         $thumbnail = Thumbnail::make($request->image, $dimension, $path);
+    //         // Updating Image Paths
+    //         $entry->update([
+    //             "image" => $thumbnail['image'],
+    //             "image_medium" => $thumbnail['image_medium'],
+    //             "image_small" => $thumbnail['image_small'],
+    //             "updated_by" => auth()->id(),
+    //             "updated_at" => now(),
+    //         ]);
+    //     }
+    //     // Checking for icon
+    //     if ($request->hasFile('icon')) {
+    //         Storage::disk('public')->delete($entry->icon);
+
+    //         $path = "services/categories/icons";
+    //         $filename = uniqid() . '.' . $request->file('icon')->getClientOriginalExtension();
+
+    //         $image = Image::make($request->file('icon'))
+    //             ->fit(100, 100)
+    //             ->encode();
+    //         Storage::disk('public')->put($path . '/' . $filename, (string) $image);
+    //         $entry->update([
+    //             "icon"       => $path . '/' . $filename,
+    //             "updated_by" => auth()->id(),
+    //             "updated_at" => now(),
+    //         ]);
+    //     }
+    // }
+
     public function assetsChecker($entry, $request)
     {
-        // Checking for sample
+        // -------------------------
+        // IMAGE HANDLING (MAIN IMAGE)
+        // -------------------------
         if ($request->hasFile('image')) {
 
-            // Deleting existing image
+            // Delete existing images
             Storage::delete($entry->image);
             Storage::delete($entry->image_medium);
             Storage::delete($entry->image_small);
 
-            // Thumbnail Maker
-            $dimension = [
-                'medium' => [
-                    'width' => 320,
-                    'height' => 180,
-                ],
-                'small' => [
-                    'width' => 240,
-                    'height' => 135,
-                ]
-            ];
             $path = "services/categories";
-            $thumbnail = Thumbnail::make($request->image, $dimension, $path);
 
-            // Updating Image Paths
+            // Original / large image (max width 1920px, compress 70%)
+            $original = Image::make($request->file('image'))
+                ->resize(1920, null, function ($constraint) {
+                    $constraint->aspectRatio();
+                    $constraint->upsize();
+                })
+                ->encode('jpg', 70); // Force JPG, quality 70
+
+            $originalName = $path . '/' . uniqid() . '.jpg';
+            Storage::put($originalName, (string)$original);
+
+            // Medium thumbnail
+            $medium = Image::make($request->file('image'))
+                ->fit(320, 180)
+                ->encode('jpg', 70);
+            $mediumName = $path . '/medium_' . uniqid() . '.jpg';
+            Storage::put($mediumName, (string)$medium);
+
+            // Small thumbnail
+            $small = Image::make($request->file('image'))
+                ->fit(240, 135)
+                ->encode('jpg', 70);
+            $smallName = $path . '/small_' . uniqid() . '.jpg';
+            Storage::put($smallName, (string)$small);
+
+            // Update DB paths
             $entry->update([
-                "image" => $thumbnail['image'],
-                "image_medium" => $thumbnail['image_medium'],
-                "image_small" => $thumbnail['image_small'],
+                "image" => $originalName,
+                "image_medium" => $mediumName,
+                "image_small" => $smallName,
                 "updated_by" => auth()->id(),
                 "updated_at" => now(),
             ]);
         }
 
-        // Checking for icon
+        // -------------------------
+        // ICON HANDLING
+        // -------------------------
         if ($request->hasFile('icon')) {
-            Storage::disk('public')->delete($entry->icon);
+            Storage::delete($entry->icon);
 
-            $path = "services/categories/icons";
-            $filename = uniqid() . '.' . $request->file('icon')->getClientOriginalExtension();
+            $iconPath = "services/categories/icons";
+            $iconName = $iconPath . '/' . uniqid() . '.png';
 
-            $image = Image::make($request->file('icon'))
+            $icon = Image::make($request->file('icon'))
                 ->fit(100, 100)
-                ->encode();
-
-            Storage::disk('public')->put($path . '/' . $filename, (string) $image);
+                ->encode('png', 70);
+            Storage::put($iconName, (string)$icon);
 
             $entry->update([
-                "icon"       => $path . '/' . $filename,
+                "icon" => $iconName,
                 "updated_by" => auth()->id(),
                 "updated_at" => now(),
             ]);
         }
     }
+
+
 
     /**
      * Store a newly created resource in storage.
@@ -156,7 +224,7 @@ class ServiceCategoryController extends Controller
             "slogan" => $request->slogan,
             "title" => $request->title,
             "url" => $request->url,
-             "overview" => $request->overview,
+            "overview" => $request->overview,
             "solution_overview" => $request->solution_overview,
             "project_overview" => $request->project_overview,
             "description" => $request->description,

@@ -120,6 +120,7 @@ Route::middleware('auth')
         Route::resource('service-list', ServiceListController::class)->only(['store', 'update']);
         Route::resource('clients', ClientController::class)->only(['store', 'update']);
         Route::resource('growthpaths', GrowthPathController::class)->only(['store', 'update']);
+        Route::resource('gallery', GalleryController::class)->only(['store', 'update']);
         Route::resource('happy-clients', HappyClientController::class)->only(['store', 'update']);
         Route::resource('offers', OfferController::class)->only(['store', 'update']);
         Route::resource('popup', PopupController::class)->only(['store', 'update']);
@@ -473,6 +474,16 @@ Route::middleware('auth')
                 Route::get('create', Create::class)->name('create');
                 Route::get('show/{growthpath}', Show::class)->name('show');
                 Route::get('edit/{growthpath}', Edit::class)->name('edit');
+            });
+
+        Route::namespace('Gallery')
+            ->prefix('gallery')
+            ->name('gallery.')
+            ->group(function () {
+                Route::get('/', Index::class)->name('index');
+                Route::get('create', Create::class)->name('create');
+                Route::get('show/{gallery}', Show::class)->name('show');
+                Route::get('edit/{gallery}', Edit::class)->name('edit');
             });
 
         Route::namespace('HappyClients')
