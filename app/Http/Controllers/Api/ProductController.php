@@ -35,7 +35,7 @@ class ProductController extends Controller
                 ->where('visible', 1)
                 ->orderBy('position', 'asc')
                 ->get();
-            $sliders = $sliders->map(fn ($slider) => new SliderResource($slider));
+            $sliders = $sliders->map(fn($slider) => new SliderResource($slider));
 
             // Section Data
             $sectionData = SectionData::where('page', 'products')->get();
@@ -64,27 +64,27 @@ class ProductController extends Controller
                 ];
             });
 
-                        // segment Categories
-                        $segment_categories = ServiceCategory::where('visible', true)
-                        ->where('type', 'segment')
-                        ->get();
+            // segment Categories
+            $segment_categories = ServiceCategory::where('visible', true)
+                ->where('type', 'segment')
+                ->get();
 
-                        $segment_categories = $segment_categories->map(function ($category) {
-                        $services = ProductSegment::where('category_id', $category->id)->get();
+            $segment_categories = $segment_categories->map(function ($category) {
+                $services = ProductSegment::where('category_id', $category->id)->get();
 
+                return [
+                    "title" => $category->title,
+                    "url" => $category->url,
+                    "overview" => $category->overview,
+                    "description" => Str::limit($category->description, 156, '...'),
+                    "image" => secure_asset('storage/' . $category->image_small),
+                    "services" => $services->map(function ($service) {
                         return [
-                         "title" => $category->title,
-                         "url" => $category->url,
-                         "overview" => $category->overview,
-                         "description" => Str::limit($category->description, 156, '...'),
-                         "image" => secure_asset('storage/' . $category->image_small),
-                         "services" => $services->map(function ($service) {
-                          return [
-                        "title" => $service->title,
-                        "url" => $service->url,
-                              ];
-                }),
-            ];
+                            "title" => $service->title,
+                            "url" => $service->url,
+                        ];
+                    }),
+                ];
             });
 
             // Metadata
@@ -111,86 +111,30 @@ class ProductController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    // public function segment($slug)
-    // {
-    //     try {
-    //         // Slider
-    //         $sliders = Slider::where('page_name', 'products')
-    //             ->where('visible', 1)
-    //             ->orderBy('position', 'asc')
-    //             ->get();
-    //         $sliders = $sliders->map(function ($slider) {
-    //             return [
-    //                 "slogan" => $slider->slogan,
-    //                 "slogan_color" => $slider->slogan_color,
-    //                 "title" => $slider->title,
-    //                 "title_color" => $slider->title_color,
-    //                 "overview" => $slider->overview,
-    //                 "overview_color" => $slider->overview_color,
-    //                 "link" => $slider->link,
-    //                 "link_text" => $slider->link_text,
-    //                 "image" => $slider->image,
-    //                 "image" => env('APP_ENV') == 'local' ? asset('storage/' . $slider->image) : secure_asset('storage/' . $slider->image),
-    //             ];
-    //         });
-
-    //         // Segment get
-    //         $segment = ProductSegment::where('url', $slug)
-    //             ->where('visible', 1)->first();
-
-    //         $total_solutions = $segment->solutions->count();
-    //         $three_solutions = $segment->solutions->take(3);
-    //         $solutions = $three_solutions->map(function ($segment) {
-    //             return [
-    //                 "title" => $segment->title,
-    //                 "url" => $segment->url,
-    //                 "description" => Str::limit($segment->description, 156, '...'),
-    //                 "image" => $segment->image ? (env('APP_ENV') == 'local' ? asset('storage/' . $segment->image) : secure_asset('storage/' . $segment->image)) : null,
-    //             ];
-    //         });
-
-    //         $total_projects = $segment->projects->count();
-    //         $three_projects = $segment->projects->take(3);
-    //         $projects = $three_projects->map(function ($project) {
-    //             return [
-    //                 "title" => $project->title,
-    //                 "url" => $project->url,
-    //                 "description" => Str::limit($project->description, 156, '...'),
-    //                 "image" => $project->image ? (env('APP_ENV') == 'local' ? asset('storage/' . $project->image) : secure_asset('storage/' . $project->image)) : null,
-    //             ];
-    //         });
-
-    //         $response = [
-    //             "status" => 1,
-    //             "message" => "success",
-    //             "data" => [
-    //                 "segment" => $segment,
-    //                 "sliders" => $sliders,
-    //                 "solutions" => $solutions,
-    //                 "projects" => $projects,
-    //                 "total_projects" => $total_projects,
-    //                 "total_solutions" => $total_solutions
-    //             ]
-    //         ];
-    //         return response($response, 200);
-    //     } catch (Exception $exception) {
-    //         // return $exception->getMessage();
-    //         return response("Something went wrong.", 500);
-    //     }
-    // }
-
-      public function segment($slug)
+    public function segment($slug)
     {
         try {
             // Slider
-            $sliders = Slider::where('page_name', 'products')
+            $specificSliders = Slider::where('page_name', 'products')
                 ->where('visible', 1)
+                ->where('segment_slug', $slug)
                 ->orderBy('position', 'asc')
                 ->get();
+
+            if ($specificSliders->isNotEmpty()) {
+                $sliders = $specificSliders;
+            } else {
+                $sliders = Slider::where('page_name', 'products')
+                    ->where('visible', 1)
+                    ->whereNull('segment_slug')
+                    ->orderBy('position', 'asc')
+                    ->get();
+            }
             $sliders = $sliders->map(function ($slider) {
                 return [
                     "slogan" => $slider->slogan,
                     "slogan_color" => $slider->slogan_color,
+                    "segment_slug" => $slider->segment_slug,
                     "title" => $slider->title,
                     "title_color" => $slider->title_color,
                     "overview" => $slider->overview,
@@ -202,7 +146,7 @@ class ProductController extends Controller
                 ];
             });
 
-                     // Segment get
+            // Segment get
             $segment = ProductSegment::where('url', $slug)
                 ->where('visible', 1)->first();
 
@@ -360,7 +304,7 @@ class ProductController extends Controller
                 ->where('visible', true)
                 ->firstOrFail();
 
-            $categories = BlogCategory::where('visible', true)->where('language','en')->get();
+            $categories = BlogCategory::where('visible', true)->where('language', 'en')->get();
             $categories = $categories->map(function ($item) {
                 return [
                     "title" => $item->title,
@@ -434,11 +378,11 @@ class ProductController extends Controller
                 ->where('visible', true)
                 ->firstOrFail();
 
-              $segment->image = $segment->image ? (env('APP_ENV') == 'local' ? asset('storage/' . $segment->image) : secure_asset('storage/' . $segment->image)) : null;
+            $segment->image = $segment->image ? (env('APP_ENV') == 'local' ? asset('storage/' . $segment->image) : secure_asset('storage/' . $segment->image)) : null;
 
-              //get segments category info and related segments
+            //get segments category info and related segments
 
-                $category = ServiceCategory::where('id', $segment->category_id)->where('visible', true)->first();
+            $category = ServiceCategory::where('id', $segment->category_id)->where('visible', true)->first();
 
 
             $response = [
@@ -557,7 +501,7 @@ class ProductController extends Controller
                 ->where('visible', 1)
                 ->orderBy('position', 'asc')
                 ->get();
-            $sliders = $sliders->map(fn ($slider) => new SliderResource($slider));
+            $sliders = $sliders->map(fn($slider) => new SliderResource($slider));
 
             // Section Data
             $sectionData = SectionData::where('page', 'products')->get();
@@ -577,7 +521,7 @@ class ProductController extends Controller
 
             // Brands
             $brands = Brand::where('visible', true)->get();
-            $brands = $brands->map(fn ($brand) => new BrandResource($brand));
+            $brands = $brands->map(fn($brand) => new BrandResource($brand));
 
             // Promotions
             $promotions = ProductPromotion::where('visible', true)->get();
@@ -589,7 +533,7 @@ class ProductController extends Controller
             });
 
             // Products
-            $products = Product::where('visible', true)->get()->take(20);
+            $products = Product::with('reviews')->where('visible', true)->get()->take(20);
             $products = $products->map(function ($product) {
                 return [
                     "image" => env('APP_ENV') == 'local' ? asset('storage/' . $product->image_medium) : secure_asset('storage/' . $product->image_medium),
@@ -635,7 +579,7 @@ class ProductController extends Controller
                 ->where('visible', 1)
                 ->orderBy('position', 'asc')
                 ->get();
-            $sliders = $sliders->map(fn ($slider) => new SliderResource($slider));
+            $sliders = $sliders->map(fn($slider) => new SliderResource($slider));
 
             // Section Data
             $sectionData = SectionData::where('page', 'products')->get();
@@ -665,8 +609,8 @@ class ProductController extends Controller
 
             // Brands
             $brands = Brand::where('visible', true)
-            ->get();
-            $brands = $brands->map(fn ($brand) => new BrandResource($brand));
+                ->get();
+            $brands = $brands->map(fn($brand) => new BrandResource($brand));
 
             // Promotions
             $promotions = ProductPromotion::where('visible', true)->get();
@@ -678,22 +622,22 @@ class ProductController extends Controller
             });
 
             // Team
-            $supports=Team::where('support',1)->get()->take(3);
+            $supports = Team::where('support', 1)->get()->take(3);
 
 
-               // trendy slider
+            // trendy slider
             $trendy_sliders = Slider::where('page_name', 'trendy-banner')
-               ->where('visible', 1)
-               ->take(3)
-               ->orderBy('position', 'asc')
-               ->get();
-            $trendy_sliders = $trendy_sliders->map(fn ($slider) => new SliderResource($slider));
+                ->where('visible', 1)
+                ->take(3)
+                ->orderBy('position', 'asc')
+                ->get();
+            $trendy_sliders = $trendy_sliders->map(fn($slider) => new SliderResource($slider));
 
             // Products
-            $trendy_products = Product::where('visible', true)
-            ->where('views', '>', 1000)
-            ->take(3)
-            ->get();
+            $trendy_products = Product::with('reviews')->where('visible', true)
+                ->where('views', '>', 1000)
+                ->take(3)
+                ->get();
             $trendy_products = $trendy_products->map(function ($product) {
                 return [
                     "image" => env('APP_ENV') == 'local' ? asset('storage/' . $product->image_medium) : secure_asset('storage/' . $product->image_medium),
@@ -709,10 +653,10 @@ class ProductController extends Controller
 
             // popular products
 
-            $featured_products = Product::where('visible', true)
-            // where ('featured', 1)
-            ->where('featured', 1)
-            ->get();
+            $featured_products = Product::with('reviews')->where('visible', true)
+                // where ('featured', 1)
+                ->where('featured', 1)
+                ->get();
             $featured_products = $featured_products->map(function ($product) {
                 return [
                     "image" => env('APP_ENV') == 'local' ? asset('storage/' . $product->image_medium) : secure_asset('storage/' . $product->image_medium),
@@ -759,7 +703,7 @@ class ProductController extends Controller
 
     public function trending()
     {
-        $products = Product::where('visible', true)
+        $products = Product::with('reviews')->where('visible', true)
             ->orderBy('views', 'desc')
             ->inRandomOrder()
             ->get()
@@ -866,7 +810,7 @@ class ProductController extends Controller
     public function show($url)
     {
         try {
-            $trending = Product::where('visible', true)
+            $trending = Product::with('reviews')->where('visible', true)
                 ->orderBy('views', 'desc')
                 ->inRandomOrder()
                 ->get()
@@ -884,9 +828,10 @@ class ProductController extends Controller
             // Faqs
             $faqs = Faq::where('faq_for', $url)->get();
 
-            $product = Product::with('images')->where('url', $url)
+            $product = Product::with('images', 'reviews')->where('url', $url)
                 ->where('visible', true)
                 ->firstOrFail();
+
 
             $product->increment('views');
             $product->save();
@@ -951,7 +896,7 @@ class ProductController extends Controller
             ];
 
             //get all reviews for this product
-            $reviews=Review::where('product_id',$product['id'])->get();
+            $reviews = Review::where('product_id', $product['id'])->where('status', 1)->get();
 
             $response = [
                 "status" => true,
@@ -1026,7 +971,7 @@ class ProductController extends Controller
                 ->where('visible', 1)
                 ->orderBy('position', 'asc')
                 ->get();
-            $sliders = $sliders->map(fn ($slider) => new SliderResource($slider));
+            $sliders = $sliders->map(fn($slider) => new SliderResource($slider));
 
             // Categories
             $categories = $brand->categories()->where('visible', 1)->get();
@@ -1068,7 +1013,7 @@ class ProductController extends Controller
 
             // Team
 
-            $supports=Team::where('support',1)->get()->take(3);
+            $supports = Team::where('support', 1)->get()->take(3);
 
             $response = [
                 "status" => 1,
@@ -1124,7 +1069,7 @@ class ProductController extends Controller
                 ->where('visible', 1)
                 ->orderBy('position', 'asc')
                 ->get();
-            $sliders = $sliders->map(fn ($slider) => new SliderResource($slider));
+            $sliders = $sliders->map(fn($slider) => new SliderResource($slider));
 
             // Brands
             $brands = Brand::where('visible', 1)->get();
@@ -1138,6 +1083,7 @@ class ProductController extends Controller
 
             // Products
             $products = $category->products()
+                ->with('reviews')
                 ->where('visible', true)
                 ->take(8)
                 ->get();
@@ -1150,14 +1096,15 @@ class ProductController extends Controller
                     "regular_price" => $product->regular_price,
                     "brand" => $product->brand->url,
                     "overview" => $product->overview,
+                    "reviews" => $product->reviews,
                 ];
             });
 
             // Faqs
             $faqs = Faq::where('faq_for', $category->url)->get();
 
-           // Team
-             $supports=Team::where('support',1)->get()->take(3);
+            // Team
+            $supports = Team::where('support', 1)->get()->take(3);
 
             $response = [
                 "status" => 1,
@@ -1180,18 +1127,11 @@ class ProductController extends Controller
             return response($exception->getMessage(), 500);
         }
     }
-
-
-
-
-
-
-
     public function productsBrandCategory($brand, $category)
     {
         try {
             //meta
-             $meta = Metadata::where('page_name', "products")->first();
+            $meta = Metadata::where('page_name', "products")->first();
             // Brand
             $brand = Brand::where('url', $brand)->first();
 
@@ -1200,7 +1140,7 @@ class ProductController extends Controller
                 ->where('visible', 1)
                 ->orderBy('position', 'asc')
                 ->get();
-            $sliders = $sliders->map(fn ($slider) => new SliderResource($slider));
+            $sliders = $sliders->map(fn($slider) => new SliderResource($slider));
 
             // Category
             $category = ProductCategory::where('url', $category)->first();
@@ -1235,7 +1175,7 @@ class ProductController extends Controller
 
             // support
 
-            $supports=Team::where('support',1)->get()->take(3);
+            $supports = Team::where('support', 1)->get()->take(3);
 
             $response = [
                 "status" => 1,
@@ -1266,7 +1206,7 @@ class ProductController extends Controller
                 ->where('visible', 1)
                 ->orderBy('position', 'asc')
                 ->get();
-            $sliders = $sliders->map(fn ($slider) => new SliderResource($slider));
+            $sliders = $sliders->map(fn($slider) => new SliderResource($slider));
 
             // Segment
             $segment = ProductSegment::where('url', $segment)->first();

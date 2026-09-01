@@ -16,6 +16,7 @@ class SliderResource extends JsonResource
         return [
             "slogan" => $this->slogan,
             "slogan_color" => $this->slogan_color,
+            "segment_slug" => $this->segment_slug,
             "title" => $this->title,
             "title_color" => $this->title_color,
             "overview" => $this->overview,

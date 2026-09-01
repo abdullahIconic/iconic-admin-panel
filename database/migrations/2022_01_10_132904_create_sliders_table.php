@@ -18,6 +18,7 @@ class CreateSlidersTable extends Migration
             $table->boolean('visible')->default(1);
             $table->tinyInteger('position')->nullable();
             $table->string('page_name');
+            $table->string('segment_slug')->nullable();
 
             $table->string('slogan')->nullable();
             $table->string('slogan_color')->nullable();

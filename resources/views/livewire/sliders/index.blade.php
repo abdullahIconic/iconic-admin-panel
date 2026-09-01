@@ -34,6 +34,7 @@
                     <th scope="col">Visible</th>
                     <th scope="col">Position</th>
                     <th scope="col">Page Identifier</th>
+                    <th scope="col">Segment Slug</th>
                     <th scope="col">Action</th>
                 </tr>
             </thead>
@@ -47,6 +48,7 @@
                     <td>{{$slider->visible ? "Yes" : "No"}}</td>
                     <td>{{$slider->position}}</td>
                     <td>{{$slider->page_name}}</td>
+                    <td>{{$slider->segment_slug}}</td>
                     <td>
                         <a href="{{route('sliders.show', $slider->id)}}" class="btn bg-success text-white">View</a>
                         <a href="{{route('sliders.edit', $slider->id)}}" class="btn bg-warning">Edit</a>

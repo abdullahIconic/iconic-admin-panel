@@ -42,6 +42,15 @@
             @enderror
         </div>
         <div class="col-md-4">
+            <label class="form-label" for="segment_slug">Segment Slug</label>
+            <input wire:model="segment_slug" type="text" class="form-control" placeholder="Segment Slug" name="segment_slug">
+            @error('segment_slug')
+            <span class="invalid-feedback" role="alert">
+                <strong>{{ $message }}</strong>
+            </span>
+            @enderror
+        </div>
+        <div class="col-md-4">
             <label class="form-label" for="slogan">Slogan</label>
             <input wire:model="slogan" type="text" class="form-control @error('slogan') is-invalid @enderror" name="slogan" id="slogan" placeholder="Slogan" value="{{ old('slogan') }}">
             @error('slogan')

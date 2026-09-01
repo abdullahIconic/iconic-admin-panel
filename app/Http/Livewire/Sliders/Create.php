@@ -11,6 +11,7 @@ class Create extends Component
     public
         $visible = 1,
         $page_name = 'home',
+        $segment_slug = '',
         $slogan,
         $position,
         $slogan_color,

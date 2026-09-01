@@ -281,6 +281,7 @@ Route::middleware('auth')
                 Route::get('create', Create::class)->name('create');
                 Route::get('show/{product}', Show::class)->name('show');
                 Route::get('edit/{product}', Edit::class)->name('edit');
+                Route::get('reviews', Reviews::class)->name('reviews');
 
                 Route::namespace('Brands')
                     ->prefix('brands')

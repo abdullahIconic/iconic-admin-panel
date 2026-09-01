@@ -156,6 +156,7 @@ public function assetsChecker($entry, $request)
         $slider = Slider::create([
             'visible' => $request->visible,
             'page_name' => $request->page_name,
+            'segment_slug' => $request->segment_slug,
             'position' => $request->position,
             'slogan' => $request->slogan,
             'slogan_color' => $request->slogan_color,
@@ -211,6 +212,7 @@ public function assetsChecker($entry, $request)
         $slider->update([
             'visible' => $request->visible,
             'page_name' => $request->page_name,
+            'segment_slug' => $request->segment_slug,
             'slogan' => $request->slogan,
             'position' => $request->position,
             'slogan_color' => $request->slogan_color,
