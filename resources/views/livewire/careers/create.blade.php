@@ -71,15 +71,7 @@
             </span>
             @enderror
         </div>
-        <div class="col-md-12">
-            <label class="form-label" for="description">Description</label>
-            <textarea wire:model="description" type="text" class="form-control @error('description') is-invalid @enderror" name="description" id="description" placeholder="Description">{{ old('description') }}</textarea>
-            @error('description')
-            <span class="invalid-feedback" role="alert">
-                <strong>{{ $message }}</strong>
-            </span>
-            @enderror
-        </div>
+
         <div class="col-md-6">
             <label class="form-label" for="meta_description">Meta keywords</label>
             <textarea wire:model="meta_description" type="text" class="form-control @error('meta_description') is-invalid @enderror" name="meta_description" placeholder="Meta Description">{{ old('meta_description') }}</textarea>
@@ -101,7 +93,7 @@
         <div class="col-md-5">
             <label class="form-label" for="button_text">Button Text</label>
             <input wire:model="button_text" type="text" class="form-control @error('button_text') is-invalid @enderror" name="button_text" id="button_text" placeholder="button text" value="{{ old('button_text') }}" required>
-            @error('title')
+            @error('button_text')
             <span class="invalid-feedback" role="alert">
                 <strong>{{ $message }}</strong>
             </span>
@@ -111,6 +103,15 @@
             <label class="form-label" for="button_url">Button Url</label>
             <input wire:model="button_url" type="text" class="form-control @error('button_url') is-invalid @enderror" name="button_url" id="button_url" placeholder="button url" value="{{ old('button_url') }}" required>
             @error('button_url')
+            <span class="invalid-feedback" role="alert">
+                <strong>{{ $message }}</strong>
+            </span>
+            @enderror
+        </div>
+         <div class="col-md-12" wire:ignore>
+            <label class="form-label" for="description">Description</label>
+            <textarea type="text" class="form-control tinymce @error('description') is-invalid @enderror" name="description" id="description" placeholder="Description">{{ old('description') }}</textarea>
+            @error('description')
             <span class="invalid-feedback" role="alert">
                 <strong>{{ $message }}</strong>
             </span>
