@@ -12,6 +12,7 @@ use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\ServiceController;
 use App\Http\Controllers\Api\ActivityController;
 use App\Http\Controllers\Api\ResourceController;
+use App\Http\Controllers\Api\SearchController;
 use App\Http\Controllers\Api\SolutionController;
 use App\Http\Controllers\Api\ApplicationControlle;
 use App\Http\Controllers\Api\IndustriesController;
@@ -34,6 +35,9 @@ Route::controller(HomeController::class)
         Route::get('home-page-data', 'data');
         Route::get('site-information', 'siteinfo');
     });
+
+// Search
+Route::get('search', [SearchController::class, 'search']);
 
 // Industries
 Route::controller(IndustriesController::class)

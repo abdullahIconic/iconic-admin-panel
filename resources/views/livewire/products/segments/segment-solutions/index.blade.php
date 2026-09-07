@@ -43,7 +43,7 @@
                         <img height="50" src="{{asset('storage/'.$solution->image)}}" alt="">
                     </td>
                     <td>{{$solution->title}}</td>
-                    <td>{{$solution->product_segment->title}}</td>
+                    <td>{{$solution->product_segment->title ?? 'N/A'}}</td>
                     <td>{{$solution->visible ? "Yes" : "No"}}</td>
                     <td>
                         <a href="{{route('products.segments.solutions.show', $solution->id)}}"
